@@ -1,5 +1,5 @@
 import { defineConfig } from "tsup";
-import { cleanMaps, terserOptions } from "../../scripts/terser.mjs";
+import { LEGAL, cleanMaps, terserOptions } from "../../scripts/terser.mjs";
 
 export default defineConfig({
   entry: ["src/index.ts"],
@@ -12,7 +12,7 @@ export default defineConfig({
   sourcemap: true,
   external: ["react", "react-dom", "@colorshot/core"],
   // components use hooks: mark the bundle as client code for React Server Components (Next.js app router)
-  banner: { js: '"use client";' },
+  banner: { js: `${LEGAL}\n"use client";` },
   esbuildOptions(options) {
     // no /* @__PURE__ */ on every JSX call: terser keeps annotations (for the top-level ones that matter
     // to tree-shaking), and hundreds of them inside components only add bytes

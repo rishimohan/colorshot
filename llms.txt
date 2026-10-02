@@ -1,0 +1,145 @@
+# Colorshot
+
+> Colorshot (`@orshot/colorshot`) is an open source color and gradient picker for React and Vue, with a framework-free core. It takes and returns plain CSS strings: solid colors in any CSS format, and linear, radial, conic and repeating gradients. MIT licensed, made by Orshot.
+
+- Docs and live demos: https://orshot.com/open-source/colorshot
+- Source: https://github.com/rishimohan/colorshot
+- Package: https://www.npmjs.com/package/@orshot/colorshot
+
+## Install
+
+```bash
+npm i @orshot/colorshot
+```
+
+Import the stylesheet once, in the app's root layout or entry file:
+
+```ts
+import "@orshot/colorshot/styles.css";
+```
+
+## Entries
+
+| Import | What it is |
+| --- | --- |
+| `@orshot/colorshot/react` | React components: `ColorPicker`, `ColorField`, and composable `Picker.*` parts |
+| `@orshot/colorshot/vue` | The same components for Vue 3 |
+| `@orshot/colorshot` | Framework-free helpers: parsing, formatting, conversion, gradients, contrast, the picker store. Safe in server code |
+| `@orshot/colorshot/styles.css` | The stylesheet, inside `@layer colorshot` so app styles win |
+
+React 18/19 and Vue 3.5+ are optional peer dependencies. An app only bundles the entry it imports.
+
+## React
+
+```tsx
+"use client"; // Next.js app router: the picker is a client component
+
+import { useState } from "react";
+import { ColorPicker } from "@orshot/colorshot/react";
+import "@orshot/colorshot/styles.css";
+
+export function FillPicker() {
+  const [fill, setFill] = useState("linear-gradient(135deg, #3E5CEB 0%, #22C55E 100%)");
+  return (
+    <ColorPicker
+      value={fill}
+      onChange={setFill} // every frame while dragging or typing
+      onChangeComplete={(value) => save(value)} // once, when the change is done
+    />
+  );
+}
+```
+
+A field that opens the picker in a popover (flips to stay on screen, closes on Escape or outside click, returns focus). Takes every `ColorPicker` prop:
+
+```tsx
+import { ColorField } from "@orshot/colorshot/react";
+
+<ColorField label="Fill" value={fill} onChange={setFill} gradientPresets />;
+```
+
+## Vue
+
+```vue
+<script setup>
+import { ref } from "vue";
+import { ColorPicker } from "@orshot/colorshot/vue";
+import "@orshot/colorshot/styles.css";
+
+const fill = ref("#3E5CEB");
+</script>
+
+<template>
+  <ColorPicker v-model="fill" @change-complete="save" />
+</template>
+```
+
+## No framework
+
+```ts
+import { createPicker, parseColor, formatColor } from "@orshot/colorshot";
+
+const picker = createPicker({ value: "#3E5CEB", onChange: (value) => console.log(value) });
+picker.setHsva({ h: 140 });
+picker.commit();
+
+formatColor(parseColor("rgb(62 92 235 / 50%)").color, "hex"); // "#3e5ceb80"
+```
+
+## Common props (ColorPicker and ColorField)
+
+- `value: string`: any CSS color or gradient. Text it cannot read is shown as unsupported and left unchanged. It never throws.
+- `onChange(value)`: fires while dragging or typing, at most once per frame.
+- `onChangeComplete(value)`: fires once when a change ends. Save and record undo here.
+- `modes`: any of `"solid" | "linear" | "radial" | "conic"`. Default: all four. Use `modes={["solid"]}` where gradients are not allowed.
+- `alpha: boolean`: show the opacity slider and field. Default `true`. Use `alpha={false}` where transparency is not allowed.
+- `outputFormat: string | (color) => string`: how picked colors are written. Default keeps the format of the incoming value.
+- `formats`: formats in the input menu, for example `["hex", "rgb", "hsl"]`.
+- `swatches`: swatch groups, e.g. `[{ id: "brand", label: "Brand", colors: [{ value: "#3E5CEB", label: "Tide" }], onAdd, onRemove }, { id: "recent", label: "Recent", recent: true }]`. Groups also take `limit`, `showIn`, `onReorder`, `onRename`.
+- `swatchSearch`: search every group by name, value or hex.
+- `gradientPresets: boolean | string[]`: gradient swatches in gradient modes.
+- `theme: "light" | "dark"`: force a theme. Default follows the OS.
+- `size: "sm"`: compact, 240px wide.
+- `variant: "inset"`: mode tabs first and a framed area.
+- `storageKey: string | null`: where recent colors and the chosen format are remembered. `null` keeps them in memory.
+- Optional features, all off by default: `space="oklch"`, `history` (undo/redo), `contrastWith="#fff"` (WCAG badge), `compare`, `tabIcons`, `swatchLayout="stack"`, `shortcuts={false}`, `eyeDropper={fn}`.
+
+Always on: Cmd/Ctrl+C copies and Cmd/Ctrl+V pastes any CSS color or gradient while the picker has focus; keys 1-4 switch modes; two-finger trackpad swipes move the area, sliders, stops and angle; Alt-drag duplicates a stop; drag a stop off the bar or press Delete to remove it.
+
+## Composable parts
+
+Build your own layout from `Picker.Root` and its parts: `Area`, `Hue`, `Alpha`, `ModeTabs`, `GradientEditor`, `GradientBar`, `GradientControls`, `AngleDial`, `CenterPad`, `Inputs`, `EyeDropper`, `Swatches`, `Preview`, `Contrast`, `CurrentSwatch`, `Notice`.
+
+```tsx
+import { Picker } from "@orshot/colorshot/react";
+
+<Picker.Root value={value} onChange={setValue} modes={["solid"]}>
+  <Picker.Area />
+  <Picker.Hue />
+  <Picker.Inputs formats={["hex"]} alpha={false} />
+</Picker.Root>;
+```
+
+## Core helpers (`@orshot/colorshot`)
+
+- Colors: `parseColor`, `formatColor`, `convert`, `toSrgb`, `inGamut`, `toGamut`, `hsvToRgb`, `rgbToHsv`, `colorKey`
+- Gradients: `isGradient`, `parseGradient`, `serializeGradient`, `gradientAngle`, `gradientCenter`
+- Canvas handles: `gradientHandles(value, width, height)` returns handles for drawing a gradient editor on your own canvas (or `null` when the value is not a gradient); `moveGradientHandle(value, id, x, y, width, height, { snap })` returns the new CSS value
+- Contrast: `contrastRatio`, `contrastLevel`, `luminance`
+- Safety: `isSafeCssValue`, `safeCssValue`
+- Store: `createPicker(options)`, the state machine the React and Vue pickers use
+
+## Theming
+
+Set CSS variables on any parent or on the picker: `--cs-accent`, `--cs-radius`, `--cs-width`, `--cs-shadow` and more. Styles live in `@layer colorshot`, so unlayered app CSS overrides them without `!important`.
+
+## Notes for coding agents
+
+- Keep the stored value format the user already has. Use `outputFormat` to match it (for example uppercase hex when opaque, `rgba()` otherwise).
+- Save in `onChangeComplete`, not `onChange`.
+- In Next.js, render the picker from a client component.
+- With shadcn/ui, put `ColorField` (or `ColorPicker` inside your own Popover) where a color `Input` was, and theme it with `--cs-accent`.
+
+## License
+
+MIT, copyright Rishi Mohan (Orshot), https://orshot.com/open-source/colorshot. The color conversion matrices come from CSS Color Module Level 4 under the W3C Software and Document License; see THIRD-PARTY-NOTICES.md.

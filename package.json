@@ -6,7 +6,7 @@
     "name": "Rishi Mohan",
     "url": "https://orshot.com"
   },
-  "homepage": "https://colorshot.orshot.com",
+  "homepage": "https://orshot.com/open-source/colorshot",
   "license": "MIT",
   "scripts": {
     "build": "turbo run build",

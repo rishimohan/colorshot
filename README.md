@@ -2,7 +2,7 @@
 
 A color and gradient picker for React, Vue and the web. Open source, by [Orshot](https://orshot.com).
 
-> Status: 0.1.0, ready to publish (see [RELEASING.md](RELEASING.md)). Docs: https://colorshot.orshot.com
+> Status: 0.1.0, ready to publish (see [RELEASING.md](RELEASING.md)). Docs: https://orshot.com/open-source/colorshot. For coding agents: [llms.txt](llms.txt)
 
 ## Develop
 
@@ -117,4 +117,4 @@ import { ColorField } from "@orshot/colorshot/react";
 
 ## License
 
-MIT
+MIT. Free for personal and commercial use. Keep the copyright line and license text, which link to https://orshot.com/open-source/colorshot. The color conversion matrices come from CSS Color Module Level 4, see [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md).

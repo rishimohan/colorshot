@@ -22,5 +22,6 @@ const min = css
   .replace(/: /g, ":")
   .replace(/;}/g, "}")
   .trim();
-writeFileSync("dist/styles.css", `/* Colorshot styles. Source: https://github.com/rishimohan/colorshot/tree/main/packages/styles/src */\n${min}\n`);
+// /*! so CSS minifiers in apps keep the license line
+writeFileSync("dist/styles.css", `/*! Colorshot | MIT License | https://orshot.com/open-source/colorshot */\n${min}\n`);
 console.log(`dist/styles.css: ${files.length} files, ${min.length} bytes`);

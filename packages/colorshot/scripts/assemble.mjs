@@ -43,6 +43,9 @@ for (const [pkg, name] of [["core", "index"], ["react", "react"], ["vue", "vue"]
 }
 
 copyFileSync(from("styles", "dist/styles.css"), to("styles.css"));
+// agent docs and the W3C notice ship with the package, from the repo root
+copyFileSync(new URL("../../../llms.txt", import.meta.url), to("llms.txt"));
+copyFileSync(new URL("../../../THIRD-PARTY-NOTICES.md", import.meta.url), to("THIRD-PARTY-NOTICES.md"));
 // lets `import "@orshot/colorshot/styles.css"` type-check without the app declaring *.css modules
 writeFileSync(to("styles.css.d.cts"), "export {};\n");
 console.log("@orshot/colorshot: dist/{index,react,vue}.{js,cjs,d.ts,d.cts} and styles.css");

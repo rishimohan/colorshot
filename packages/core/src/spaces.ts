@@ -1,6 +1,7 @@
 // Color spaces and conversions from CSS Color Module Level 4.
 // Every space converts through CIE XYZ (D65). Matrices are the ones published in the spec's sample code
-// (https://www.w3.org/TR/css-color-4/#color-conversion-code, W3C Software and Document License).
+// (https://www.w3.org/TR/css-color-4/#color-conversion-code), under the W3C Software and Document License:
+// see THIRD-PARTY-NOTICES.md.
 
 export type ColorSpace =
   | "srgb"

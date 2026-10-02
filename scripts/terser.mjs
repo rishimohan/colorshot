@@ -3,13 +3,18 @@
 // animation, and `pure_getters: true` would drop that read.
 import { readFileSync, readdirSync, writeFileSync } from "node:fs";
 
+// License comment at the top of every built file. Bundlers and minifiers keep /*! comments by default (or move
+// them to a LICENSE.txt), so the license and the link travel with the code into apps.
+export const LEGAL = "/*! Colorshot | MIT License | https://orshot.com/open-source/colorshot */";
+
 export const terserOptions = {
   ecma: 2020,
   // `directives: false` keeps the React "use client" banner, which terser would otherwise drop as non-standard
   compress: { passes: 3, toplevel: true, unsafe_arrows: true, directives: false },
   mangle: { toplevel: true },
   // keep /* @__PURE__ */ marks so app bundlers can drop unused components
-  format: { comments: false, preserve_annotations: true },
+  // and keep the /*! license comment (LEGAL)
+  format: { comments: /^!/, preserve_annotations: true },
   sourceMap: true,
 };
 

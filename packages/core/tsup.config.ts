@@ -1,5 +1,5 @@
 import { defineConfig } from "tsup";
-import { cleanMaps, terserOptions } from "../../scripts/terser.mjs";
+import { LEGAL, cleanMaps, terserOptions } from "../../scripts/terser.mjs";
 
 export default defineConfig({
   entry: ["src/index.ts"],
@@ -11,4 +11,5 @@ export default defineConfig({
   terserOptions: { ...terserOptions, mangle: { ...terserOptions.mangle, properties: { regex: /^_/ } } },
   onSuccess: async () => cleanMaps(),
   sourcemap: true,
+  banner: { js: LEGAL },
 });

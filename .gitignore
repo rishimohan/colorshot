@@ -26,4 +26,6 @@ packages/styles/styles.css
 # private planning notes
 docs/internal/
 packages/colorshot/styles.css
+packages/colorshot/llms.txt
+packages/colorshot/THIRD-PARTY-NOTICES.md
 packages/colorshot/styles.css.d.cts

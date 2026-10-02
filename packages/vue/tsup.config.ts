@@ -2,7 +2,7 @@ import { readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { defineConfig } from "tsup";
 import type { Plugin } from "esbuild";
-import { cleanMaps, terserOptions } from "../../scripts/terser.mjs";
+import { LEGAL, cleanMaps, terserOptions } from "../../scripts/terser.mjs";
 
 // esbuild keeps one import statement per source module for each external package, each with its own
 // aliases, which costs about 1 KB gzip here. Routing "vue", "vue/jsx-runtime" and "@colorshot/core" through
@@ -67,6 +67,7 @@ export default defineConfig({
   terserOptions,
   onSuccess: async () => cleanMaps(),
   sourcemap: true,
+  banner: { js: LEGAL },
   external: ["vue"],
   // let the plugin above see these imports; it marks them external itself
   noExternal: [/^vue(\/jsx-runtime)?$/, /^@colorshot\/core$/],

@@ -25,7 +25,7 @@
     "vue3",
     "wcag contrast"
   ],
-  "homepage": "https://colorshot.orshot.com",
+  "homepage": "https://orshot.com/open-source/colorshot",
   "bugs": {
     "url": "https://github.com/rishimohan/colorshot/issues"
   },
@@ -103,6 +103,8 @@
     "styles.css.d.cts",
     "README.md",
     "LICENSE",
+    "THIRD-PARTY-NOTICES.md",
+    "llms.txt",
     "CHANGELOG.md"
   ],
   "scripts": {
