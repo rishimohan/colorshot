@@ -1,0 +1,137 @@
+{
+  "name": "@orshot/colorshot",
+  "version": "0.1.0",
+  "description": "Color and gradient picker for React and Vue. Solid, linear, radial and conic gradients, every CSS color format including OKLCH and Display P3, accessible and themeable.",
+  "keywords": [
+    "color",
+    "color conversion",
+    "color input",
+    "color parser",
+    "color picker",
+    "colorshot",
+    "css colors",
+    "display-p3",
+    "eyedropper",
+    "framework-agnostic",
+    "gradient",
+    "gradient picker",
+    "oklch",
+    "react",
+    "react color picker",
+    "react gradient picker",
+    "swatches",
+    "vue",
+    "vue color picker",
+    "vue3",
+    "wcag contrast"
+  ],
+  "homepage": "https://colorshot.orshot.com",
+  "bugs": {
+    "url": "https://github.com/rishimohan/colorshot/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rishimohan/colorshot.git",
+    "directory": "packages/colorshot"
+  },
+  "license": "MIT",
+  "engines": {
+    "node": ">=20"
+  },
+  "author": {
+    "name": "Rishi Mohan",
+    "url": "https://orshot.com"
+  },
+  "type": "module",
+  "sideEffects": [
+    "*.css"
+  ],
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "style": "./styles.css",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      }
+    },
+    "./react": {
+      "import": {
+        "types": "./dist/react.d.ts",
+        "default": "./dist/react.js"
+      },
+      "require": {
+        "types": "./dist/react.d.cts",
+        "default": "./dist/react.cjs"
+      }
+    },
+    "./vue": {
+      "import": {
+        "types": "./dist/vue.d.ts",
+        "default": "./dist/vue.js"
+      },
+      "require": {
+        "types": "./dist/vue.d.cts",
+        "default": "./dist/vue.cjs"
+      }
+    },
+    "./styles.css": {
+      "types": "./styles.css.d.cts",
+      "default": "./styles.css"
+    },
+    "./package.json": "./package.json"
+  },
+  "typesVersions": {
+    "*": {
+      "react": [
+        "./dist/react.d.ts"
+      ],
+      "vue": [
+        "./dist/vue.d.ts"
+      ]
+    }
+  },
+  "files": [
+    "dist",
+    "styles.css",
+    "styles.css.d.cts",
+    "README.md",
+    "LICENSE",
+    "CHANGELOG.md"
+  ],
+  "scripts": {
+    "build": "node scripts/assemble.mjs",
+    "prepublishOnly": "node scripts/assemble.mjs"
+  },
+  "peerDependencies": {
+    "react": "^18.0.0 || ^19.0.0",
+    "react-dom": "^18.0.0 || ^19.0.0",
+    "vue": "^3.5.0"
+  },
+  "peerDependenciesMeta": {
+    "react": {
+      "optional": true
+    },
+    "react-dom": {
+      "optional": true
+    },
+    "vue": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@colorshot/core": "workspace:*",
+    "@colorshot/react": "workspace:*",
+    "@colorshot/styles": "workspace:*",
+    "@colorshot/vue": "workspace:*"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "$schema": "https://turbo.build/schema.json",
+  "extends": [
+    "//"
+  ],
+  "tasks": {
+    "build": {
+      "outputs": [
+        "dist/**",
+        "styles.css",
+        "styles.css.d.cts"
+      ]
+    }
+  }
+}
