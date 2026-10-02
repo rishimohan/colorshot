@@ -5,8 +5,17 @@ test.beforeEach(async ({ page }) => openHarness(page));
 
 test("switching modes morphs the header swatch, then the morph layer goes away", async ({ page }) => {
   const root = picker(page, "full");
+  // the layer lives only as long as its animation, which a slow runner can finish before the first check:
+  // record that it appeared instead of polling for it
+  await root.evaluate((el) => {
+    const w = window as unknown as { morphSeen: boolean };
+    w.morphSeen = false;
+    new MutationObserver(() => {
+      if (el.querySelector('[data-part="current-morph"]')) w.morphSeen = true;
+    }).observe(el, { childList: true, subtree: true });
+  });
   await root.getByRole("radio", { name: "Linear" }).click();
-  await expect(part(root, "current-morph")).toHaveCount(1);
+  await expect.poll(() => page.evaluate(() => (window as unknown as { morphSeen: boolean }).morphSeen)).toBe(true);
   await expect(part(root, "current-morph")).toHaveCount(0, { timeout: 2000 });
   // the swatch ends on the new value
   const swatch = await part(root, "current-value").evaluate((el) => el.style.getPropertyValue("--_cs-swatch"));
