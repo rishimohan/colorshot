@@ -1,0 +1,72 @@
+{
+  "name": "@colorshot/core",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Framework-free color and gradient picker logic: CSS Color 4 parsing, conversion, gradients and picker state.",
+  "keywords": [
+    "color picker",
+    "gradient",
+    "gradient picker",
+    "oklch",
+    "css colors",
+    "color",
+    "colorshot",
+    "color conversion",
+    "color parser",
+    "display-p3",
+    "wcag contrast",
+    "framework-agnostic"
+  ],
+  "homepage": "https://colorshot.orshot.com",
+  "bugs": {
+    "url": "https://github.com/rishimohan/colorshot/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rishimohan/colorshot.git",
+    "directory": "packages/core"
+  },
+  "license": "MIT",
+  "engines": {
+    "node": ">=20"
+  },
+  "author": {
+    "name": "Rishi Mohan",
+    "url": "https://orshot.com"
+  },
+  "type": "module",
+  "sideEffects": false,
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      }
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE",
+    "CHANGELOG.md"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit",
+    "prepublishOnly": "pnpm run build && pnpm run test"
+  },
+  "devDependencies": {
+    "tsup": "^8.5.1",
+    "typescript": "~5.9.3",
+    "vitest": "^5.0.3"
+  }
+}
