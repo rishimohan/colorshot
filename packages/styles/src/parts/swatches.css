@@ -9,6 +9,11 @@
     margin-top: 4px;
   }
 
+  /* first in the panel (a swatches-only picker): the panel padding is the only gap, same on every side */
+  [data-colorshot] > [data-part="swatches"]:first-child {
+    margin-top: 0;
+  }
+
   [data-colorshot] [data-part="swatch-group"] {
     display: flex;
     flex-direction: column;
