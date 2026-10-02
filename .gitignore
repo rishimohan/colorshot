@@ -1,0 +1,29 @@
+# node
+node_modules/
+dist
+.turbo
+.next
+coverage
+
+# logs
+npm-debug.log*
+pnpm-debug.log*
+
+# system
+.DS_Store
+
+# tests
+test-results
+playwright-report
+blob-report
+*.tsbuildinfo
+
+# build copies of the stylesheet at each package root (for tools that ignore "exports")
+packages/react/styles.css
+packages/vue/styles.css
+packages/styles/styles.css
+
+# private planning notes
+docs/internal/
+packages/colorshot/styles.css
+packages/colorshot/styles.css.d.cts
