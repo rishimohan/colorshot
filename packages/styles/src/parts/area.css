@@ -1,0 +1,95 @@
+@layer colorshot {
+  [data-colorshot]:not([data-mode="solid"]) [data-part="area"] {
+    height: var(--cs-area-height-gradient);
+  }
+
+  /* --- area --- */
+
+  [data-colorshot] [data-part="area"] {
+    position: relative;
+    height: var(--cs-area-height);
+    transition: height var(--cs-motion) var(--cs-ease);
+    border-radius: var(--cs-radius-sm);
+    background: linear-gradient(to top, #000, transparent), linear-gradient(to right, #fff, transparent), var(--_cs-area-hue);
+    box-shadow: inset 0 0 0 1px var(--cs-edge);
+    touch-action: none;
+    cursor: crosshair;
+    contain: layout;
+  }
+
+  /*
+   * Bleed: an area that is the picker's first child runs to the panel edges with no frame, so the panel reads
+   * as the color itself (custom layouts get it too when they start with the area). The panel's top and side
+   * edges are the area's edges, so the thumb stops short of them instead of hanging off the panel.
+   */
+  [data-colorshot] > [data-part="area"]:first-child {
+    --_cs-edge-room: calc(var(--cs-thumb) / 2 + 2px);
+    /* over the panel's 1px border too: a light border line around a dark color reads as a white ring */
+    margin: calc(-1 * var(--cs-padding) - 1px) calc(-1 * var(--cs-padding) - 1px) 0;
+    border-radius: var(--cs-radius) var(--cs-radius) 0 0;
+    box-shadow: none;
+  }
+
+  [data-colorshot] > [data-part="area"]:first-child > [data-part="area-thumb"] {
+    translate:
+      calc(clamp(var(--_cs-edge-room), var(--_cs-x) * 100cqw, 100cqw - var(--_cs-edge-room)) - 50%)
+      calc(max(var(--_cs-edge-room), var(--_cs-y) * 100cqh) - 50%);
+  }
+
+  /* the framed area of variant="inset" sits inside the padding, so it is a little shorter */
+  [data-colorshot][data-variant="inset"] {
+    --cs-area-height: 168px;
+  }
+
+  [data-colorshot][data-variant="inset"][data-size="sm"] {
+    --cs-area-height: 140px;
+  }
+
+  [data-colorshot] > [data-part="area"]:first-child > [data-part="gamut-badge"] {
+    top: 8px;
+    inset-inline-end: 8px;
+  }
+
+  [data-colorshot] [data-part="area"][data-space="oklch"] {
+    background: #000;
+  }
+
+  [data-colorshot] [data-part="area-canvas"],
+  [data-colorshot] [data-part="area-edge"] {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: inherit;
+    pointer-events: none;
+  }
+
+  [data-colorshot] [data-part="area-edge"] path {
+    fill: none;
+    stroke: rgb(255 255 255 / 0.75);
+    stroke-width: 1.25px;
+    stroke-dasharray: 3 3;
+  }
+
+  [data-colorshot] [data-part="area"][data-space="oklch"] [data-part="area-thumb"] {
+    z-index: 1;
+  }
+
+  /* WCAG AA boundary against the contrast background (contrastWith) */
+  [data-colorshot] [data-part="area-contrast"] {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    overflow: visible;
+  }
+
+  [data-colorshot] [data-part="area-contrast"] path {
+    fill: none;
+    stroke: #fff;
+    stroke-width: 1.5px;
+    stroke-dasharray: 4 3;
+    filter: drop-shadow(0 0 1px rgb(0 0 0 / 0.7));
+  }
+}

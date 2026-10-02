@@ -1,0 +1,383 @@
+@layer colorshot {
+  /* --- eyedropper --- */
+
+  [data-colorshot] [data-part="eye-dropper"] {
+    display: grid;
+    place-items: center;
+    flex: none;
+    width: var(--cs-control);
+    height: var(--cs-control);
+    border-radius: var(--cs-radius-control);
+    color: var(--cs-fg);
+    /* a light control, like the fields it usually sits next to */
+    background: transparent;
+    box-shadow: inset 0 0 0 1px var(--cs-hairline);
+    transition: background var(--cs-motion-fast);
+  }
+
+  [data-colorshot] [data-part="eye-dropper"]:hover {
+    background: var(--cs-surface);
+  }
+
+  [data-colorshot] [data-part="eye-dropper"][data-state="active"] {
+    background: var(--cs-accent);
+    color: #fff;
+    animation: cs-pulse 1.4s ease-out infinite;
+  }
+
+  @keyframes cs-pulse {
+    0% {
+      box-shadow: 0 0 0 0 color-mix(in srgb, var(--cs-accent) 55%, transparent);
+    }
+    100% {
+      box-shadow: 0 0 0 10px transparent;
+    }
+  }
+
+  [data-colorshot] [data-part="eye-dropper"]:active,
+  [data-colorshot] [data-part="icon-button"]:active:not(:disabled),
+  [data-colorshot] [data-part="mode-tabs"] button:active,
+  [data-colorshot] [data-part="segmented"] button:active {
+    transform: scale(0.94);
+  }
+
+  [data-colorshot] [data-part="eye-dropper"],
+  [data-colorshot] [data-part="icon-button"] {
+    transition: background var(--cs-motion-fast), color var(--cs-motion-fast), transform var(--cs-motion-fast);
+  }
+
+  /* --- fields --- */
+
+  [data-colorshot] [data-part="inputs"] {
+    display: flex;
+    align-items: center;
+    gap: var(--cs-gap-inline);
+  }
+
+  [data-colorshot] [data-part="fields"] {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    gap: var(--cs-gap-inline);
+  }
+
+  [data-colorshot] [data-part="field"] {
+    flex: 1 1 0;
+    min-width: 0;
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    height: var(--cs-control);
+    padding-inline: 8px;
+    /* light controls: no fill, a hairline that darkens on hover and turns accent on focus */
+    background: transparent;
+    border-radius: var(--cs-radius-control);
+    box-shadow: inset 0 0 0 1px var(--cs-hairline);
+    transition: box-shadow var(--cs-motion-fast);
+  }
+
+  [data-colorshot] [data-part="field"]:hover {
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--cs-fg) 24%, transparent);
+  }
+
+  [data-colorshot] [data-part="field"]:focus-within {
+    box-shadow: inset 0 0 0 1.5px var(--cs-accent);
+  }
+
+  [data-colorshot] [data-part="field"][data-field="hex"] {
+    flex-grow: 3;
+  }
+
+  /*
+   * Number fields are as wide as the widest value they can show (100, 360, -0.400...), measured in the page's
+   * own font: the sizer holds hidden copies of the text (field-ghost) and the input fills it. Fonts differ a lot in digit
+   * width (tabular figures are often wider than the "0" a ch unit measures), so no fixed widths here.
+   */
+  [data-colorshot] [data-part="field-sizer"] {
+    display: inline-grid;
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
+  /*
+   * Two hidden copies set the width: the widest possible value keeps it steady, the current text makes sure
+   * it never clips. Real spans, not ::before / ::after: Safari measures generated text without tabular figures.
+   */
+  [data-colorshot] [data-part="field-ghost"] {
+    grid-area: 1 / 1;
+    height: 0;
+    overflow: hidden;
+    visibility: hidden;
+    white-space: pre;
+    /* Safari's input needs ~2px past its text for the caret, or the last digit counts as clipped */
+    padding-inline-end: 2px;
+  }
+
+  /* no intrinsic width of its own (Safari keeps ~35px even at size=1); it fills what the hidden text sizes */
+  [data-colorshot] [data-part="field-sizer"] > [data-part="field-input"] {
+    grid-area: 1 / 1;
+    width: 0;
+    min-width: 100%;
+  }
+
+  /* fields with a unit after the number (°, %): sized to their content, the number hugs the unit */
+  [data-colorshot] [data-part="field"][data-field="alpha"],
+  [data-colorshot] [data-part="field"][data-field="angle"],
+  [data-colorshot] [data-part="field"][data-field="stop"] {
+    flex: none;
+    gap: 1px;
+  }
+
+  [data-colorshot] [data-part="field"][data-field="alpha"] {
+    padding-inline: 7px;
+  }
+
+  [data-colorshot] [data-part="field-sizer"]:has(+ [data-part="field-label"]) > [data-part="field-input"] {
+    text-align: right;
+  }
+
+  [data-colorshot] [data-part="field-label"] {
+    flex: none;
+    color: var(--cs-muted);
+    font-size: var(--cs-font-size-sm);
+    cursor: ew-resize;
+    touch-action: none;
+  }
+
+  [data-colorshot] [data-field="hex"] [data-part="field-label"] {
+    cursor: default;
+  }
+
+  [data-colorshot] [data-part="field-input"] {
+    flex: 1;
+    min-width: 0;
+    width: 100%;
+    padding: 0;
+    border: 0;
+    outline: none;
+    background: transparent;
+    user-select: text;
+    text-transform: none;
+  }
+
+  /* each channel starts at the width of its widest value (from its sizer) and shares what is left */
+  [data-colorshot] [data-field="channel"] {
+    flex: 1 1 auto;
+    padding-inline: 4px;
+  }
+
+  [data-colorshot] [data-field="channel"] [data-part="field-input"] {
+    text-align: center;
+  }
+
+  [data-colorshot] [data-field="hex"] [data-part="field-input"] {
+    text-transform: uppercase;
+  }
+
+  /* before / after swatch beside the sliders */
+  [data-colorshot] [data-part="preview"][data-compare] {
+    flex: none;
+    width: var(--cs-control);
+    height: calc(var(--cs-track-height) * 2 + var(--cs-gap));
+    flex-direction: column;
+  }
+
+  [data-colorshot] [data-part="preview"][data-compare] [data-part="preview-swatch"] {
+    width: 100%;
+  }
+
+  /* --- header: current value + mode tabs --- */
+
+  [data-colorshot] [data-part="header"] {
+    display: flex;
+    align-items: center;
+    gap: var(--cs-gap-inline);
+  }
+
+  [data-colorshot] [data-part="header"] > [data-part="mode-tabs"] {
+    flex: 1;
+    min-width: 0;
+  }
+
+  [data-colorshot] [data-part="current"] {
+    display: flex;
+    flex: none;
+    width: var(--cs-control);
+    height: var(--cs-control);
+    border-radius: var(--cs-radius-control);
+    box-shadow: inset 0 0 0 1px var(--cs-border);
+    transition: width var(--cs-motion) var(--cs-ease);
+  }
+
+  [data-colorshot] [data-part="current"][data-compare] {
+    width: calc(var(--cs-control) * 1.7);
+  }
+
+  [data-colorshot] [data-part="current-value"],
+  [data-colorshot] [data-part="current-original"] {
+    position: relative;
+    flex: 1;
+    min-width: 0;
+    background: var(--cs-checker);
+    cursor: pointer;
+  }
+
+  [data-colorshot] [data-part="current-value"]::before,
+  [data-colorshot] [data-part="current-original"]::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: var(--_cs-swatch);
+    box-shadow: inset 0 0 0 1px var(--cs-edge);
+  }
+
+  /* mode switch: the new value grows out of the middle of the old one */
+  [data-colorshot] [data-part="current-morph"] {
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: var(--cs-checker);
+    animation: cs-morph var(--cs-motion) var(--cs-ease) both;
+    pointer-events: none;
+  }
+
+  [data-colorshot] [data-part="current-morph"]::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: var(--_cs-swatch);
+    box-shadow: inset 0 0 0 1px var(--cs-edge);
+  }
+
+  @keyframes cs-morph {
+    from {
+      clip-path: circle(0% at 50% 50%);
+    }
+    to {
+      clip-path: circle(72% at 50% 50%);
+    }
+  }
+
+  [data-colorshot] [data-part="current"] > :first-child {
+    border-radius: var(--cs-radius-control) 0 0 var(--cs-radius-control);
+  }
+
+  [data-colorshot] [data-part="current"] > :last-child {
+    border-radius: 0 var(--cs-radius-control) var(--cs-radius-control) 0;
+  }
+
+  [data-colorshot] [data-part="current"] > :only-child {
+    border-radius: var(--cs-radius-control);
+  }
+
+  /* --- slider row: eyedropper beside the hue and opacity sliders --- */
+
+  [data-colorshot] [data-part="slider-row"] {
+    display: flex;
+    align-items: center;
+    gap: var(--cs-gap-inline);
+  }
+
+  [data-colorshot] [data-part="slider-row"] > [data-part="sliders"] {
+    flex: 1;
+    min-width: 0;
+  }
+
+  [data-colorshot] [data-part="slider-row"] > [data-part="eye-dropper"] {
+    margin-inline-start: -4px;
+    background: transparent;
+    box-shadow: none;
+    color: var(--cs-muted);
+  }
+
+  [data-colorshot] [data-part="slider-row"] > [data-part="eye-dropper"]:hover {
+    background: var(--cs-surface);
+    color: var(--cs-fg);
+  }
+
+  [data-colorshot] [data-part="slider-row"] > [data-part="eye-dropper"][data-state="active"] {
+    background: var(--cs-accent);
+    color: #fff;
+  }
+
+  /* --- inputs: one joined control (format | value | opacity) --- */
+
+  [data-colorshot] [data-part="inputs"] {
+    gap: 0;
+    border-radius: var(--cs-radius-control);
+    background: transparent;
+    box-shadow: inset 0 0 0 1px var(--cs-hairline);
+    transition: box-shadow var(--cs-motion-fast);
+  }
+
+  [data-colorshot] [data-part="inputs"]:hover {
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--cs-fg) 24%, transparent);
+  }
+
+  [data-colorshot] [data-part="inputs"] [data-part="fields"] {
+    gap: 0;
+  }
+
+  [data-colorshot] [data-part="inputs"] [data-part="field"],
+  [data-colorshot] [data-part="inputs"] [data-part="select-trigger"] {
+    background: transparent;
+    border-radius: 0;
+  }
+
+  /* hairline dividers between the cells of the joined control */
+  [data-colorshot] [data-part="inputs"] [data-part="field"],
+  [data-colorshot] [data-part="inputs"] [data-part="field"]:hover {
+    box-shadow: inset 1px 0 0 var(--cs-hairline);
+  }
+
+  [data-colorshot] [data-part="inputs"] [data-part="field"]:focus-within {
+    border-radius: var(--cs-radius-control);
+    box-shadow: inset 0 0 0 1.5px var(--cs-accent);
+  }
+
+  [data-colorshot] [data-part="inputs"] [data-part="select-trigger"] {
+    border-radius: var(--cs-radius-control) 0 0 var(--cs-radius-control);
+    box-shadow: none;
+  }
+
+  [data-colorshot] [data-part="inputs"] [data-part="select-trigger"]:hover {
+    background: var(--cs-surface);
+  }
+
+  [data-colorshot] [data-part="inputs"] [data-part="select-trigger"]:focus-visible {
+    border-radius: var(--cs-radius-control);
+  }
+
+  [data-colorshot] [data-part="inputs"] [data-field="alpha"] {
+    justify-content: center;
+  }
+
+  [data-colorshot] [data-part="field"]:has([data-part="field-sizer"] + [data-part="field-label"]) {
+    justify-content: center;
+  }
+
+  /* rejected input: a short shake and a red ring */
+  [data-colorshot] [data-part="field"][data-invalid] {
+    animation: cs-shake 0.36s cubic-bezier(0.36, 0.07, 0.19, 0.97);
+    box-shadow: inset 0 0 0 1.5px var(--cs-danger);
+  }
+
+  @keyframes cs-shake {
+    20%,
+    60% {
+      translate: -3px 0;
+    }
+    40%,
+    80% {
+      translate: 3px 0;
+    }
+  }
+
+  /* without mode tabs, the current swatch becomes a full-width preview strip */
+  [data-colorshot] [data-part="header"]:not(:has([data-part="mode-tabs"])) > [data-part="current"] {
+    flex: 1;
+    width: auto;
+  }
+}

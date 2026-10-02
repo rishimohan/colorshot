@@ -1,0 +1,142 @@
+@layer colorshot {
+  /*
+   * Thumbs: area, sliders, gradient stops, center handle.
+   * Positioned with `translate` in container units (each track is a size container), so moving a thumb
+   * never triggers layout: the browser only composites. `scale` is a separate property, so hover / press
+   * grow the thumb without fighting the position.
+   */
+
+  [data-colorshot] [data-part="area"],
+  [data-colorshot] [data-slider],
+  [data-colorshot] [data-part="gradient-bar"],
+  [data-colorshot] [data-part="center-pad"] {
+    container-type: size;
+  }
+
+  [data-colorshot] [data-part="area-thumb"],
+  [data-colorshot] [data-part="slider-thumb"],
+  [data-colorshot] [data-part="stop"],
+  [data-colorshot] [data-part="center-handle"] {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: var(--cs-thumb);
+    height: var(--cs-thumb);
+    border-radius: 50%;
+    background: var(--_cs-thumb-color);
+    border: 2.5px solid #fff;
+    /* a dark hairline keeps the white ring visible on white */
+    box-shadow: 0 0 0 1px rgb(0 0 0 / 0.24), 0 2px 6px rgb(0 0 0 / 0.22);
+    translate: calc(var(--_cs-x) * 100cqw - 50%) calc(var(--_cs-y, 0.5) * 100cqh - 50%);
+    scale: 1;
+    outline: none;
+    /* a click or key press glides the thumb to its new place; while dragging it follows the pointer exactly */
+    transition:
+      translate var(--cs-motion) var(--cs-ease),
+      scale var(--cs-motion) var(--cs-ease),
+      box-shadow var(--cs-motion-fast),
+      opacity var(--cs-motion-fast);
+  }
+
+  [data-colorshot] [data-part="center-handle"] {
+    /* centers outside the box (valid CSS) are pinned to the edge */
+    translate: calc(clamp(0, var(--_cs-x), 1) * 100cqw - 50%) calc(clamp(0, var(--_cs-y), 1) * 100cqh - 50%);
+  }
+
+  /* focus: a gap in the panel color, then a solid accent ring, so it reads on any color under the thumb */
+  [data-colorshot] [data-part="area-thumb"]:focus-visible,
+  [data-colorshot] [data-part="slider-thumb"]:focus-visible,
+  [data-colorshot] [data-part="stop"]:focus-visible,
+  [data-colorshot] [data-part="center-handle"]:focus-visible {
+    box-shadow: 0 0 0 1px rgb(0 0 0 / 0.24), 0 0 0 3px var(--cs-bg), 0 0 0 5px var(--cs-accent);
+  }
+
+  /* a compositor layer only while a thumb is likely to move, not one per thumb all the time */
+  [data-colorshot] [data-dragging] > [data-part],
+  [data-colorshot] [data-wheeling] > [data-part],
+  [data-colorshot] [data-part="area"]:hover > [data-part="area-thumb"],
+  [data-colorshot] [data-slider]:hover > [data-part="slider-thumb"],
+  [data-colorshot] [data-part="gradient-bar"]:hover > [data-part="stop"],
+  [data-colorshot] [data-part="center-pad"]:hover > [data-part="center-handle"],
+  [data-colorshot] [data-part="area-thumb"]:focus-visible,
+  [data-colorshot] [data-part="slider-thumb"]:focus-visible,
+  [data-colorshot] [data-part="stop"]:focus-visible,
+  [data-colorshot] [data-part="center-handle"]:focus-visible {
+    will-change: translate;
+  }
+
+  /* while dragging or swiping, the thumb follows the pointer exactly */
+  [data-colorshot] [data-dragging] > [data-part],
+  [data-colorshot] [data-wheeling] > [data-part] {
+    transition:
+      scale var(--cs-motion) var(--cs-ease),
+      box-shadow var(--cs-motion-fast),
+      opacity var(--cs-motion-fast);
+  }
+
+  /* pressing or swiping hides the cursor: the thumb grows and becomes the cursor */
+  [data-colorshot] [data-part="area"][data-dragging]:not([data-outside]),
+  [data-colorshot] [data-slider][data-dragging]:not([data-outside]),
+  /* doubled attributes: outranks the area, slider and stop cursors, which load later */
+  [data-colorshot][data-colorshot] [data-wheeling][data-wheeling],
+  [data-colorshot][data-colorshot] [data-wheeling][data-wheeling] * {
+    cursor: none;
+  }
+
+  [data-colorshot] [data-dragging] > [data-part="area-thumb"],
+  [data-colorshot] [data-wheeling] > [data-part="area-thumb"] {
+    scale: 1.55;
+    border-width: 2px;
+    box-shadow: 0 0 0 1px rgb(0 0 0 / 0.18), 0 6px 18px rgb(0 0 0 / 0.32);
+  }
+
+  [data-colorshot] [data-dragging] > [data-part="slider-thumb"],
+  [data-colorshot] [data-wheeling] > [data-part="slider-thumb"] {
+    scale: 1.3;
+    box-shadow: 0 0 0 1px rgb(0 0 0 / 0.18), 0 4px 12px rgb(0 0 0 / 0.3);
+  }
+
+  /* hover hints that the thumb can be grabbed */
+  [data-colorshot] [data-part="area"]:hover:not([data-dragging], [data-wheeling]) > [data-part="area-thumb"],
+  [data-colorshot] [data-slider]:hover:not([data-dragging], [data-wheeling]) > [data-part="slider-thumb"] {
+    scale: 1.08;
+  }
+
+  /* value chip that follows the area thumb while dragging or swiping */
+  [data-colorshot] [data-part="area-label"] {
+    position: absolute;
+    z-index: 2;
+    left: 0;
+    top: 0;
+    translate: clamp(30px, calc(var(--_cs-x) * 100cqw), calc(100cqw - 30px)) calc(var(--_cs-y) * 100cqh);
+    transform: translate(-50%, calc(-100% - 22px));
+    padding: 3px 6px;
+    border-radius: var(--cs-radius-inner);
+    background: rgb(0 0 0 / 0.72);
+    color: #fff;
+    font-size: var(--cs-font-size-xs);
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    white-space: nowrap;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity var(--cs-motion-fast);
+  }
+
+  [data-colorshot] [data-part="area"][data-label-below] > [data-part="area-label"] {
+    transform: translate(-50%, 22px);
+  }
+
+  [data-colorshot] [data-part="area"][data-dragging] > [data-part="area-label"],
+  [data-colorshot] [data-part="area"][data-wheeling] > [data-part="area-label"] {
+    opacity: 1;
+  }
+
+  /* bigger hit area than the visible track */
+  [data-colorshot] [data-slider]::before,
+  [data-colorshot] [data-part="gradient-bar"]::before {
+    content: "";
+    position: absolute;
+    inset: -6px calc(var(--cs-thumb) / -2);
+  }
+}

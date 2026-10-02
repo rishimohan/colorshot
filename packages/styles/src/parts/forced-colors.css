@@ -1,0 +1,63 @@
+@layer colorshot {
+  /*
+   * Forced colors (Windows High Contrast and similar). The browser swaps every color for the user's palette,
+   * which would turn each color sample into the same system color and drop the box-shadow rings. The parts
+   * that show a color opt out and keep their real colors; focus, selection and the active option are drawn
+   * with system colors, which these modes always keep.
+   */
+  @media (forced-colors: active) {
+    [data-colorshot] [data-part="area"],
+    [data-colorshot] [data-slider],
+    [data-colorshot] [data-part="gradient-bar"],
+    [data-colorshot] [data-part="swatch"],
+    [data-colorshot] [data-part="swatch"]::after,
+    [data-colorshot] [data-part="current-value"],
+    [data-colorshot] [data-part="current-original"],
+    [data-colorshot] [data-part="center-pad"],
+    [data-colorshot] [data-part="stop"],
+    [data-colorshot] [data-part="area-thumb"],
+    [data-colorshot] [data-part="slider-thumb"],
+    [data-colorshot] [data-part="contrast-sample"],
+    [data-colorshot] [data-part="swatch-rename-swatch"],
+    [data-colorshot] [data-part="preview-swatch"],
+    [data-colorshot-field] [data-part="field-swatch"] {
+      forced-color-adjust: none;
+    }
+
+    /* keyboard focus: an outline in the system highlight color, on every control */
+    [data-colorshot] :focus-visible,
+    [data-colorshot] [data-part]:focus-visible,
+    [data-colorshot] [data-part="field"]:focus-within,
+    [data-colorshot] [data-part="swatch-search"]:focus-within,
+    [data-colorshot-field]:focus-visible {
+      outline: 2px solid Highlight;
+      outline-offset: 2px;
+    }
+
+    /* text fields: the ring goes on the field around the input, not on the input as well */
+    [data-colorshot] [data-part="field-input"]:focus-visible,
+    [data-colorshot] [data-part="swatch-search-input"]:focus-visible,
+    [data-colorshot] [data-part="swatch-rename-input"]:focus-visible {
+      outline: none;
+    }
+
+    /* the chosen mode or shape: the sliding indicator gets a visible edge */
+    [data-colorshot] [data-part="mode-indicator"],
+    [data-colorshot] [data-part="segmented-indicator"] {
+      border: 2px solid Highlight;
+    }
+
+    /* the selected swatch and stop */
+    [data-colorshot] [data-part="swatch"][data-state="selected"],
+    [data-colorshot] [data-part="stop"][data-state="selected"] {
+      outline: 2px solid Highlight;
+      outline-offset: 2px;
+    }
+
+    /* the active option of the format select and the gradient menu */
+    [data-colorshot] [data-part="select-option"][data-active] {
+      outline: 2px solid Highlight;
+      outline-offset: -2px;
+    }
+  }
+}

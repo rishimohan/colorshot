@@ -1,0 +1,55 @@
+{
+  "name": "@colorshot/styles",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Default styles for Colorshot pickers (React, Vue). Plain CSS in a cascade layer, themed with --cs-* variables.",
+  "keywords": [
+    "color picker",
+    "gradient",
+    "gradient picker",
+    "oklch",
+    "css colors",
+    "color",
+    "colorshot",
+    "css"
+  ],
+  "homepage": "https://colorshot.orshot.com",
+  "bugs": {
+    "url": "https://github.com/rishimohan/colorshot/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rishimohan/colorshot.git",
+    "directory": "packages/styles"
+  },
+  "license": "MIT",
+  "engines": {
+    "node": ">=20"
+  },
+  "author": {
+    "name": "Rishi Mohan",
+    "url": "https://orshot.com"
+  },
+  "sideEffects": [
+    "*.css"
+  ],
+  "exports": {
+    ".": "./styles.css",
+    "./styles.css": "./styles.css",
+    "./package.json": "./package.json"
+  },
+  "type": "commonjs",
+  "files": [
+    "dist",
+    "src",
+    "styles.css",
+    "README.md",
+    "LICENSE",
+    "CHANGELOG.md"
+  ],
+  "style": "./styles.css",
+  "scripts": {
+    "build": "node scripts/build.mjs && cp dist/styles.css styles.css",
+    "prepublishOnly": "pnpm run build"
+  }
+}

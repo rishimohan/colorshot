@@ -1,0 +1,462 @@
+@layer colorshot {
+  /* --- swatches --- */
+
+  /* the library sits a little apart from the color controls, without a divider line */
+  [data-colorshot] [data-part="swatches"] {
+    display: flex;
+    flex-direction: column;
+    gap: var(--cs-gap);
+    margin-top: 4px;
+  }
+
+  [data-colorshot] [data-part="swatch-group"] {
+    display: flex;
+    flex-direction: column;
+    gap: var(--cs-gap-row);
+  }
+
+  /* label on the left; "show all" and the search button on the right */
+  [data-colorshot] [data-part="swatch-group-header"] {
+    display: flex;
+    align-items: center;
+    gap: var(--cs-gap-inline);
+    min-height: 20px;
+  }
+
+  [data-colorshot] [data-part="swatch-group-header"] > :first-child {
+    margin-inline-end: auto;
+  }
+
+  [data-colorshot] [data-part="swatch-group-label"] {
+    color: var(--cs-muted);
+    font-size: var(--cs-font-size-sm);
+    font-weight: 500;
+  }
+
+  [data-colorshot] [data-part="link-button"] {
+    color: var(--cs-accent);
+    font-size: var(--cs-font-size-sm);
+  }
+
+  [data-colorshot] [data-part="swatch-grid"] {
+    display: grid;
+    grid-template-columns: repeat(var(--cs-swatch-columns, 8), minmax(0, 1fr));
+    gap: var(--cs-gap-row);
+  }
+
+  [data-colorshot] [data-part="swatch-cell"] {
+    position: relative;
+    aspect-ratio: 1;
+  }
+
+  /*
+   * Selected: the color shrinks inside a thin band of itself, with a gap in the panel color between them,
+   * so the mark stays inside the cell (no overlap with neighbors) and works on any color or gradient.
+   * Hover previews it with a hairline gap. Keyboard focus adds an accent ring outside. Nothing reflows.
+   */
+  [data-colorshot] [data-part="swatch"] {
+    --_cs-ring: transparent;
+    --_cs-band: 1.5px;
+    position: relative;
+    display: block;
+    width: 100%;
+    height: 100%;
+    border-radius: var(--cs-radius-control);
+    background: var(--cs-checker);
+    box-shadow: 0 0 0 2px var(--cs-bg), 0 0 0 3.5px var(--_cs-ring);
+    outline: none;
+    transition:
+      box-shadow var(--cs-motion-fast),
+      transform var(--cs-motion-fast) var(--cs-ease);
+  }
+
+  /* the outer band: the swatch color, a touch darker so white and pale colors still show it */
+  [data-colorshot] [data-part="swatch"]::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    padding: var(--_cs-band);
+    border-radius: inherit;
+    background: linear-gradient(rgb(0 0 0 / 0.14), rgb(0 0 0 / 0.14)), var(--_cs-swatch);
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+    opacity: 0;
+    transition: opacity var(--cs-motion) var(--cs-ease);
+  }
+
+  [data-colorshot] [data-part="swatch"]::after {
+    content: "";
+    position: absolute;
+    --_cs-gap-size: 0px;
+    inset: var(--_cs-inner, 0px);
+    border-radius: max(2px, calc(var(--cs-radius-control) - var(--_cs-inner, 0px)));
+    background: var(--_cs-swatch);
+    box-shadow: 0 0 0 var(--_cs-gap-size) var(--cs-bg), inset 0 0 0 1px var(--cs-edge);
+    transition:
+      inset var(--cs-motion) var(--cs-ease),
+      border-radius var(--cs-motion) var(--cs-ease),
+      box-shadow var(--cs-motion) var(--cs-ease);
+  }
+
+  /* hover: a lighter take on the selected look */
+  [data-colorshot] [data-part="swatch"]:hover::before,
+  [data-colorshot] [data-part="swatch"][data-state="selected"]::before {
+    opacity: 1;
+  }
+
+  [data-colorshot] [data-part="swatch"]:hover::after {
+    --_cs-inner: calc(var(--_cs-band) + 1px);
+    --_cs-gap-size: 1px;
+  }
+
+  [data-colorshot] [data-part="swatch"][data-state="selected"]::after {
+    --_cs-inner: calc(var(--_cs-band) + 1.5px);
+    --_cs-gap-size: 1.5px;
+  }
+
+  [data-colorshot] [data-part="swatch"]:focus-visible {
+    --_cs-ring: var(--cs-accent);
+  }
+
+  [data-colorshot] [data-part="swatch"]:active {
+    transform: scale(0.92);
+    transition-duration: var(--cs-motion-fast), 60ms;
+  }
+
+  /*
+   * A 24px target (WCAG 2.5.8) around the 15px dot that shows. The dot stays where it always was, on the swatch's
+   * corner; the target reaches out past the corner rather than in, so it never covers the swatch's middle (where a
+   * click applies it and a drag starts). It only takes the pointer while it shows.
+   */
+  [data-colorshot] [data-part="swatch-remove"] {
+    position: absolute;
+    top: -13px;
+    right: -13px;
+    z-index: 1;
+    width: 24px;
+    height: 24px;
+    color: var(--cs-bg);
+    opacity: 0;
+    pointer-events: none;
+    transform: scale(0.7);
+    /* the dot's center */
+    transform-origin: 8.5px 15.5px;
+    transition: opacity var(--cs-motion-fast), transform var(--cs-motion-fast) var(--cs-ease);
+  }
+
+  [data-colorshot] [data-part="swatch-remove"]::before {
+    content: "";
+    position: absolute;
+    inset: 8px 8px 1px 1px;
+    border-radius: 50%;
+    background: var(--cs-fg);
+  }
+
+  [data-colorshot] [data-part="swatch-remove"] svg {
+    position: absolute;
+    top: 10.5px;
+    left: 3.5px;
+    width: 10px;
+    height: 10px;
+  }
+
+  [data-colorshot] [data-part="swatch-cell"]:hover [data-part="swatch-remove"],
+  [data-colorshot] [data-part="swatch-cell"]:focus-within [data-part="swatch-remove"] {
+    opacity: 1;
+    pointer-events: auto;
+    transform: scale(1);
+  }
+
+  /* touch screens have no hover: the remove button is always shown */
+  @media (hover: none) {
+    [data-colorshot] [data-part="swatch-remove"] {
+      opacity: 1;
+      pointer-events: auto;
+      transform: scale(1);
+    }
+  }
+
+  [data-colorshot] [data-part="swatch-add"] {
+    display: grid;
+    place-items: center;
+    aspect-ratio: 1;
+    border-radius: var(--cs-radius-control);
+    color: var(--cs-muted);
+    box-shadow: inset 0 0 0 1px var(--cs-border);
+    border: 1px dashed var(--cs-border);
+  }
+
+  [data-colorshot] [data-part="swatch-add"]:hover {
+    color: var(--cs-fg);
+    background: var(--cs-surface);
+  }
+
+  [data-colorshot] [data-part="preview"] {
+    display: flex;
+    overflow: hidden;
+    border-radius: var(--cs-radius-sm);
+    box-shadow: inset 0 0 0 1px var(--cs-border);
+    min-height: var(--cs-control);
+  }
+
+  [data-colorshot] [data-part="preview-swatch"] {
+    position: relative;
+    flex: 1;
+    background: var(--cs-checker);
+  }
+
+  [data-colorshot] [data-part="preview-swatch"]::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: var(--_cs-swatch);
+  }
+
+  [data-colorshot] [data-part="notice"] {
+    margin: 0;
+    padding: 7px 9px;
+    border-radius: var(--cs-radius-control);
+    background: var(--cs-surface);
+    color: var(--cs-muted);
+    font-size: var(--cs-font-size-sm);
+    line-height: 1.4;
+  }
+
+  /* --- swatch search and drag to bar --- */
+
+  /* the search button carries its own padding, so it sits close to the tabs */
+  [data-colorshot] [data-part="swatch-header"] {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    min-height: calc(var(--cs-control) - 6px);
+    /* drawn inside, on the same pixel row as the tab strip's own divider, so the two read as one line */
+    box-shadow: inset 0 -1px 0 var(--cs-border);
+  }
+
+  [data-colorshot] [data-part="swatch-header"][data-align="end"] {
+    justify-content: flex-end;
+    box-shadow: none;
+  }
+
+  [data-colorshot] [data-part="swatch-header"] > [data-part="swatch-tabs"] {
+    flex: 1;
+    min-width: 0;
+    background: none;
+    border-bottom: 0;
+    margin-bottom: 0;
+    align-self: stretch;
+    align-items: flex-end;
+  }
+
+  [data-colorshot] [data-part="swatch-header"] > [data-part="icon-button"] {
+    margin-bottom: 3px;
+  }
+
+  [data-colorshot] [data-part="swatch-search"] {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    height: var(--cs-control);
+    padding: 0 3px 0 8px;
+    animation: cs-pop var(--cs-motion) var(--cs-ease);
+    border-radius: var(--cs-radius-control);
+    background: var(--cs-surface);
+    color: var(--cs-muted);
+  }
+
+  [data-colorshot] [data-part="swatch-search"]:focus-within {
+    box-shadow: 0 0 0 1.5px var(--cs-accent);
+  }
+
+  [data-colorshot] [data-part="swatch-search"] svg {
+    flex: none;
+    width: 14px;
+    height: 14px;
+  }
+
+  [data-colorshot] [data-part="swatch-search-input"] {
+    flex: 1;
+    min-width: 0;
+    border: 0;
+    outline: none;
+    padding: 0;
+    background: transparent;
+    color: var(--cs-fg);
+    user-select: text;
+  }
+
+  [data-colorshot] [data-part="swatch-search-input"]::placeholder {
+    color: var(--cs-muted);
+  }
+
+  [data-colorshot] [data-part="swatch-search-input"]::-webkit-search-cancel-button {
+    display: none;
+  }
+
+  [data-colorshot] [data-part="swatch-empty"] {
+    margin: 0;
+    color: var(--cs-muted);
+    font-size: var(--cs-font-size-sm);
+    text-align: center;
+    padding: 6px 0;
+  }
+
+  [data-colorshot] [data-part="swatches"]:has([data-part="swatch-group"]) [data-part="swatch-empty"],
+  [data-colorshot] [data-part="swatch-empty"]:empty {
+    display: none;
+  }
+
+  /* clicking applies the color, so a pointer (dragging one onto the gradient bar still works) */
+  [data-colorshot] [data-part="swatch"] {
+    cursor: pointer;
+  }
+
+  [data-colorshot] [data-part="gradient-bar"][data-dropping] {
+    box-shadow: inset 0 0 0 1px var(--cs-edge), 0 0 0 2px var(--cs-accent);
+  }
+
+  [data-colorshot] [data-part="gradient-bar"][data-dropping]::after {
+    opacity: 1;
+  }
+
+  /* --- swatch groups as tabs --- */
+
+  /*
+   * Scrolls sideways only. The 2px padding (cancelled by the margins) leaves room for focus rings and the
+   * active underline inside the scroller, which would otherwise overflow it and make it scroll vertically.
+   * The divider is an inset shadow so it sits inside the padding box with the underline.
+   */
+  [data-colorshot] [data-part="swatch-tabs"] {
+    display: flex;
+    gap: 9px;
+    overflow: auto hidden;
+    overscroll-behavior-x: contain;
+    scrollbar-width: none;
+    padding: 2px;
+    margin: -2px -2px 1px;
+    /* the divider, kept inside the 2px padding so it lines up with the panel content */
+    background: linear-gradient(var(--cs-border), var(--cs-border)) 2px 100% / calc(100% - 4px) 1px no-repeat;
+  }
+
+  [data-colorshot] [data-part="swatch-tabs"]::-webkit-scrollbar {
+    display: none;
+  }
+
+  [data-colorshot] [data-part="swatch-tabs"] button {
+    position: relative;
+    flex: none;
+    padding: 0 0 7px;
+    color: var(--cs-muted);
+    font-size: var(--cs-font-size-sm);
+    font-weight: 500;
+    transition: color var(--cs-motion-fast);
+  }
+
+  [data-colorshot] [data-part="swatch-tabs"] button::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -2px;
+    height: 2px;
+    border-radius: 2px;
+    background: var(--cs-fg);
+    scale: 0 1;
+    transition: scale var(--cs-motion) var(--cs-ease);
+  }
+
+  [data-colorshot] [data-part="swatch-tabs"] button:hover,
+  [data-colorshot] [data-part="swatch-tabs"] button[data-state="active"] {
+    color: var(--cs-fg);
+  }
+
+  [data-colorshot] [data-part="swatch-tabs"] button[data-state="active"]::after {
+    scale: 1 1;
+  }
+
+  [data-colorshot] [data-part="swatch-tabs"] button:focus-visible {
+    outline-offset: 0;
+    border-radius: 3px;
+  }
+
+  /* tabbed groups show everything, scrolling after a few rows */
+  [data-colorshot] [data-part="swatch-group"][data-tabbed] [data-part="swatch-grid"] {
+    max-height: calc(var(--cs-swatch-rows, 3) * (var(--cs-control) + var(--cs-gap-row)));
+    /* down only: the remove buttons' targets reach past the last column and must not make it scroll sideways */
+    overflow: hidden auto;
+    /* room for the selection ring */
+    padding: 4px;
+    margin: -4px;
+    scrollbar-width: thin;
+  }
+
+  [data-colorshot] [data-part="swatch-empty-hint"] {
+    grid-column: 2 / -1;
+    align-self: center;
+    margin: 0;
+    color: var(--cs-muted);
+    font-size: var(--cs-font-size-sm);
+    line-height: 1.3;
+  }
+
+  [data-colorshot] [data-part="swatch-grid"]:not(:has([data-part="swatch-add"])) [data-part="swatch-empty-hint"] {
+    grid-column: 1 / -1;
+  }
+
+  [data-colorshot] [data-part="swatch-cell"][data-drop]::before {
+    content: "";
+    position: absolute;
+    z-index: 1;
+    top: 2px;
+    bottom: 2px;
+    left: calc(var(--cs-gap-row) / -2 - 1px);
+    width: 2px;
+    border-radius: 2px;
+    background: var(--cs-accent);
+  }
+
+  [data-colorshot] [data-part="swatch-rename"] {
+    display: flex;
+    align-items: center;
+    gap: var(--cs-gap-row);
+    height: var(--cs-control);
+    padding: 0 6px 0 4px;
+    border-radius: var(--cs-radius-control);
+    background: var(--cs-surface);
+    box-shadow: 0 0 0 1.5px var(--cs-accent);
+  }
+
+  [data-colorshot] [data-part="swatch-rename-swatch"] {
+    flex: none;
+    width: 20px;
+    height: 20px;
+    border-radius: var(--cs-radius-inner);
+    background: var(--_cs-swatch);
+    box-shadow: inset 0 0 0 1px var(--cs-edge);
+  }
+
+  [data-colorshot] [data-part="swatch-rename-input"] {
+    flex: 1;
+    min-width: 0;
+    border: 0;
+    outline: none;
+    padding: 0;
+    background: transparent;
+    color: var(--cs-fg);
+    user-select: text;
+  }
+
+  [data-colorshot] [data-part="swatch-tabs"][data-overflow="end"] {
+    mask-image: linear-gradient(to right, #000 calc(100% - 28px), transparent);
+  }
+
+  [data-colorshot] [data-part="swatch-tabs"][data-overflow="start"] {
+    mask-image: linear-gradient(to left, #000 calc(100% - 28px), transparent);
+  }
+
+  [data-colorshot] [data-part="swatch-tabs"][data-overflow="both"] {
+    mask-image: linear-gradient(to right, transparent, #000 28px, #000 calc(100% - 28px), transparent);
+  }
+}

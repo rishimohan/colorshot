@@ -1,0 +1,73 @@
+@layer colorshot {
+  /* --- mode tabs and segmented controls (sliding indicator) --- */
+
+  [data-colorshot] [data-part="mode-tabs"],
+  [data-colorshot] [data-part="segmented"] {
+    position: relative;
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: 1fr;
+    gap: 2px;
+    height: var(--cs-control);
+    padding: 2px;
+    background: var(--cs-surface);
+    border-radius: var(--cs-radius-control);
+    isolation: isolate;
+  }
+
+  [data-colorshot] [data-part="mode-indicator"],
+  [data-colorshot] [data-part="segmented-indicator"] {
+    position: absolute;
+    z-index: -1;
+    top: 2px;
+    bottom: 2px;
+    inset-inline-start: 2px;
+    width: calc((100% - 4px - (var(--_cs-count) - 1) * 2px) / var(--_cs-count));
+    border-radius: var(--cs-radius-inner);
+    background: var(--cs-raised);
+    box-shadow: 0 1px 2px rgb(0 0 0 / 0.12), 0 0 0 0.5px var(--cs-border);
+    transform: translateX(calc(var(--_cs-index) * (100% + 2px)));
+    transition: transform var(--cs-motion) var(--cs-ease);
+  }
+
+  /* right to left: the options start at the right, so the indicator slides the other way */
+  [data-colorshot] [data-part="mode-indicator"]:dir(rtl),
+  [data-colorshot] [data-part="segmented-indicator"]:dir(rtl) {
+    transform: translateX(calc(var(--_cs-index) * (-100% - 2px)));
+  }
+
+  [data-colorshot] [data-part="mode-tabs"] button,
+  [data-colorshot] [data-part="segmented"] button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    height: 100%;
+    border-radius: var(--cs-radius-inner);
+    color: var(--cs-muted);
+    font-size: var(--cs-font-size);
+    font-weight: 500;
+    transition: color var(--cs-motion-fast);
+  }
+
+  [data-colorshot] [data-part="mode-tabs"] button svg {
+    width: 14px;
+    height: 14px;
+    flex: none;
+  }
+
+  [data-colorshot] [data-part="mode-tabs"] button:hover,
+  [data-colorshot] [data-part="segmented"] button:hover {
+    color: var(--cs-fg);
+  }
+
+  [data-colorshot] [data-part="mode-tabs"] button[data-state="active"],
+  [data-colorshot] [data-part="segmented"] button[data-state="active"] {
+    color: var(--cs-fg);
+  }
+
+  [data-colorshot] [data-part="mode-tabs"] button:focus-visible,
+  [data-colorshot] [data-part="segmented"] button:focus-visible {
+    outline-offset: -1px;
+  }
+}

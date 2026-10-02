@@ -1,0 +1,27 @@
+@layer colorshot {
+  /* --- hue and opacity sliders: full width, thumbs travel inside the track --- */
+
+  [data-colorshot] [data-part="sliders"] {
+    display: flex;
+    flex-direction: column;
+    gap: var(--cs-gap);
+  }
+
+  [data-colorshot] [data-slider] {
+    position: relative;
+    height: var(--cs-track-height);
+    border-radius: 999px;
+    background: var(--_cs-track);
+    box-shadow: inset 0 0 0 1px var(--cs-edge);
+    touch-action: none;
+    cursor: pointer;
+  }
+
+  [data-colorshot] [data-slider][data-checker] {
+    background: var(--_cs-track), var(--cs-checker);
+  }
+
+  [data-colorshot] [data-slider] > [data-part="slider-thumb"] {
+    translate: calc(var(--cs-thumb) / 2 + var(--_cs-x) * (100cqw - var(--cs-thumb)) - 50%) calc(50cqh - 50%);
+  }
+}

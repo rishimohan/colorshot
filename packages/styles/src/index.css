@@ -1,0 +1,19 @@
+/*
+ * Colorshot default styles.
+ * Everything is in the "colorshot" cascade layer, so any style you write wins without !important.
+ * Theme with the --cs-* variables (see parts/base.css); target parts with [data-part="..."].
+ * The build concatenates these files into one dist/styles.css.
+ */
+@import "./parts/base.css";
+@import "./parts/thumbs.css";
+@import "./parts/area.css";
+@import "./parts/sliders.css";
+@import "./parts/tabs.css";
+@import "./parts/gradient.css";
+@import "./parts/controls.css";
+@import "./parts/select.css";
+@import "./parts/swatches.css";
+@import "./parts/field.css";
+@import "./parts/contrast.css";
+@import "./parts/sizes.css";
+@import "./parts/forced-colors.css";

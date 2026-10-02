@@ -1,0 +1,215 @@
+@layer colorshot {
+  /* --- select (listbox) --- */
+
+  [data-colorshot] [data-part="select"] {
+    position: relative;
+    flex: none;
+    min-width: 0;
+  }
+
+  /* as wide as its longest format name (see select-value), so switching formats never shifts the row */
+  [data-colorshot] [data-part="select"][data-kind="format"] {
+    flex: none;
+  }
+
+  [data-colorshot] [data-part="select-trigger"] {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    width: 100%;
+    height: var(--cs-control);
+    padding: 0 3px 0 8px;
+    border-radius: var(--cs-radius-control);
+    background: transparent;
+    box-shadow: inset 0 0 0 1px var(--cs-hairline);
+    transition: background var(--cs-motion-fast), box-shadow var(--cs-motion-fast);
+  }
+
+  [data-colorshot] [data-part="select-trigger"]:hover {
+    background: var(--cs-surface);
+  }
+
+  [data-colorshot] [data-part="select-trigger"]:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 1.5px var(--cs-accent);
+  }
+
+  /*
+   * A hidden copy of the longest option label (data-widest) sits in a zero-height first row of the same
+   * column, so the value is always as wide as that label in the page's own font. The label itself lands in
+   * the row below.
+   */
+  [data-colorshot] [data-part="select-value"] {
+    display: inline-grid;
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    text-align: left;
+  }
+
+  [data-colorshot] [data-part="select-value"]::after {
+    content: attr(data-widest);
+    grid-area: 1 / 1;
+    height: 0;
+    overflow: hidden;
+    visibility: hidden;
+  }
+
+  [data-colorshot] [data-part="select-chevron"] {
+    flex: none;
+    width: 14px;
+    height: 14px;
+    color: var(--cs-muted);
+    transition: transform var(--cs-motion) var(--cs-ease);
+  }
+
+  [data-colorshot] [data-part="select"][data-state="open"] [data-part="select-chevron"] {
+    transform: rotate(180deg);
+  }
+
+  [data-colorshot] [data-part="select-menu"] {
+    position: absolute;
+    z-index: 30;
+    left: 0;
+    top: calc(100% + 4px);
+    min-width: 100%;
+    max-height: 360px;
+    overflow: auto;
+    padding: 4px;
+    background: var(--cs-raised);
+    border: 1px solid var(--cs-border);
+    border-radius: calc(var(--cs-radius-control) + 4px);
+    box-shadow: var(--cs-shadow);
+    transform-origin: top left;
+    animation: cs-pop var(--cs-motion) var(--cs-ease);
+  }
+
+  [data-colorshot] [data-part="select-menu"][data-placement="top"] {
+    top: auto;
+    bottom: calc(100% + 4px);
+    transform-origin: bottom left;
+  }
+
+  @keyframes cs-pop {
+    from {
+      opacity: 0;
+      transform: scale(0.96) translateY(-2px);
+    }
+  }
+
+  [data-colorshot] [data-part="select-option"],
+  [data-colorshot] [data-part="select-action"] {
+    display: grid;
+    grid-template-columns: 16px 1fr auto;
+    align-items: center;
+    gap: 6px;
+    width: 100%;
+    height: 28px;
+    padding: 0 8px 0 5px;
+    border-radius: var(--cs-radius-control);
+    cursor: pointer;
+    white-space: nowrap;
+    text-align: left;
+  }
+
+  [data-colorshot] [data-part="select-trigger"][data-kind="icon"] {
+    justify-content: center;
+    width: var(--cs-control);
+    padding: 0;
+    background: transparent;
+    box-shadow: none;
+    color: var(--cs-muted);
+  }
+
+  [data-colorshot] [data-part="select-trigger"][data-kind="icon"]:hover,
+  [data-colorshot] [data-part="select"][data-state="open"] [data-part="select-trigger"][data-kind="icon"] {
+    background: var(--cs-surface);
+    color: var(--cs-fg);
+  }
+
+  [data-colorshot] [data-part="select"][data-kind="more"] [data-part="select-menu"] {
+    left: auto;
+    right: 0;
+    transform-origin: top right;
+  }
+
+  [data-colorshot] [data-part="select-option"][data-active],
+  [data-colorshot] [data-part="select-action"]:hover,
+  [data-colorshot] [data-part="select-action"]:focus-visible {
+    background: var(--cs-surface);
+    outline: none;
+  }
+
+  /* moved there with the keyboard: a ring as well as the fill, since focus stays on the trigger or the menu */
+  [data-colorshot] [data-part="select-menu"][data-nav="keyboard"] [data-part="select-option"][data-active],
+  [data-colorshot] [data-part="select-action"]:focus-visible {
+    box-shadow: inset 0 0 0 1.5px var(--cs-accent);
+  }
+
+  [data-colorshot] [data-part="select-check"] svg,
+  [data-colorshot] [data-part="select-action"] svg {
+    width: 14px;
+    height: 14px;
+    color: var(--cs-accent);
+  }
+
+  [data-colorshot] [data-part="select-action"] svg {
+    color: var(--cs-muted);
+  }
+
+  [data-colorshot] [data-part="select-hint"] {
+    color: var(--cs-muted);
+    font-size: var(--cs-font-size-sm);
+    padding-left: 12px;
+  }
+
+  [data-colorshot] [data-part="select-heading"] {
+    padding: 4px 8px 6px;
+    color: var(--cs-muted);
+    font-size: var(--cs-font-size-xs);
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+  }
+
+  [data-colorshot] [data-part="select-footer"] {
+    margin-top: 4px;
+    padding-top: 4px;
+    border-top: 1px solid var(--cs-border);
+  }
+
+  /* --- toast ("Copied", "Pasted"): floats at the bottom of the picker --- */
+
+  [data-colorshot] [data-part="toast"] {
+    position: absolute;
+    z-index: 50;
+    left: 50%;
+    bottom: 12px;
+    translate: -50% 0;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 8px;
+    border-radius: 999px;
+    background: var(--cs-fg);
+    color: var(--cs-bg);
+    font-size: var(--cs-font-size-sm);
+    font-weight: 500;
+    pointer-events: none;
+    opacity: 0;
+    transform: translateY(3px);
+    transition: opacity var(--cs-motion-fast), transform var(--cs-motion-fast) var(--cs-ease);
+  }
+
+  [data-colorshot] [data-part="toast"][data-state="visible"] {
+    opacity: 1;
+    transform: none;
+  }
+
+  [data-colorshot] [data-part="toast"] svg {
+    width: 12px;
+    height: 12px;
+  }
+}

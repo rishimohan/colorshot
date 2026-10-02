@@ -1,0 +1,279 @@
+@layer colorshot {
+  /* tokens: shared by the picker and the ColorField trigger */
+  [data-colorshot],
+  [data-colorshot-field] {
+    --cs-width: 280px;
+    --cs-padding: 12px;
+    --cs-gap: 10px;
+    /* one scale for every part: panel, area, control, inner */
+    --cs-radius: 12px;
+    --cs-radius-sm: 8px;
+    --cs-radius-control: 6px;
+    --cs-radius-inner: 4px;
+    /* space between separate controls in a row */
+    --cs-gap-inline: 6px;
+    --cs-gap-row: 6px;
+    --cs-area-height: 184px;
+    /*
+     * area height in gradient modes: the same by default, so switching modes leaves the tabs where they are and
+     * the gradient editor opens below them. A lower value keeps the picker shorter but moves the tabs up.
+     */
+    --cs-area-height-gradient: var(--cs-area-height);
+    --cs-thumb: 18px;
+    --cs-track-height: 12px;
+    --cs-control: 28px;
+    --cs-font-size: 12px;
+    --cs-font-size-sm: 11px;
+    --cs-font-size-xs: 10px;
+    --cs-swatch-columns: 8;
+
+    --cs-bg: #ffffff;
+    --cs-fg: #18181b;
+    --cs-muted: #5f5f68;
+    --cs-border: rgb(0 0 0 / 0.08);
+    --cs-surface: #f4f4f5;
+    --cs-surface-hover: #e9e9ec;
+    --cs-raised: #ffffff;
+    --cs-divider: rgb(0 0 0 / 0.06);
+    --cs-danger: #dc2626;
+    --cs-accent: #2563eb;
+    /* layered: a tight contact shadow plus a soft lift, so the panel separates from whatever it opens over */
+    --cs-shadow:
+      0 1px 2px rgb(0 0 0 / 0.06),
+      0 4px 8px -2px rgb(0 0 0 / 0.06),
+      0 16px 36px -8px rgb(0 0 0 / 0.2);
+    --cs-checker-a: #e4e4e7;
+    --cs-checker-b: #ffffff;
+
+    --cs-checker: repeating-conic-gradient(var(--cs-checker-a) 0% 25%, var(--cs-checker-b) 0% 50%) 0 0 / 8px 8px;
+    /* thin outline of the light controls (fields, joined inputs) */
+    --cs-hairline: rgb(0 0 0 / 0.1);
+    /* edge drawn inside every color sample, so white reads on light panels and black on dark ones */
+    --cs-edge: rgb(0 0 0 / 0.1);
+
+    /*
+     * Motion: one curve and two durations for everything. Fast for color, fill, outline and fade changes;
+     * the base duration for anything that moves or resizes. No overshoot.
+     */
+    --cs-ease: cubic-bezier(0.2, 0, 0, 1);
+    --cs-motion-fast: 120ms;
+    --cs-motion: 160ms;
+  }
+
+  [data-colorshot] {
+    position: relative;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    gap: var(--cs-gap);
+    width: var(--cs-width);
+    max-width: 100%;
+    padding: var(--cs-padding);
+    background: var(--cs-bg);
+    color: var(--cs-fg);
+    border: 1px solid var(--cs-border);
+    border-radius: var(--cs-radius);
+    box-shadow: var(--cs-shadow);
+    font-size: var(--cs-font-size);
+    line-height: 1.2;
+    font-variant-numeric: tabular-nums;
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+  }
+
+  /* nothing transitions until the picker has settled after opening (see data-settled on the root) */
+  [data-colorshot]:not([data-settled]) *,
+  [data-colorshot]:not([data-settled]) *::before,
+  [data-colorshot]:not([data-settled]) *::after {
+    transition: none !important;
+  }
+
+  [data-colorshot][data-theme="dark"],
+  [data-colorshot-field][data-theme="dark"] {
+    --cs-bg: #18181b;
+    --cs-fg: #f4f4f5;
+    --cs-muted: #a1a1aa;
+    --cs-border: rgb(255 255 255 / 0.11);
+    --cs-surface: #27272a;
+    --cs-surface-hover: #323236;
+    --cs-raised: #303036;
+    --cs-danger: #f87171;
+    --cs-divider: rgb(255 255 255 / 0.07);
+    --cs-accent: #60a5fa;
+    /* deeper than light mode: a dark shadow on a dark page only reads when it is dense */
+    --cs-shadow:
+      0 1px 2px rgb(0 0 0 / 0.4),
+      0 6px 12px -2px rgb(0 0 0 / 0.35),
+      0 20px 48px -8px rgb(0 0 0 / 0.7);
+    --cs-checker-a: #3f3f46;
+    --cs-checker-b: #27272a;
+    --cs-hairline: rgb(255 255 255 / 0.12);
+    --cs-edge: rgb(255 255 255 / 0.14);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    [data-colorshot]:not([data-theme="light"]),
+    [data-colorshot-field]:not([data-theme="light"]) {
+      --cs-bg: #18181b;
+      --cs-fg: #f4f4f5;
+      --cs-muted: #a1a1aa;
+      --cs-border: rgb(255 255 255 / 0.11);
+      --cs-surface: #27272a;
+      --cs-surface-hover: #323236;
+      --cs-raised: #303036;
+      --cs-danger: #f87171;
+      --cs-divider: rgb(255 255 255 / 0.07);
+      --cs-accent: #60a5fa;
+      --cs-shadow:
+        0 1px 2px rgb(0 0 0 / 0.4),
+        0 6px 12px -2px rgb(0 0 0 / 0.35),
+        0 20px 48px -8px rgb(0 0 0 / 0.7);
+      --cs-checker-a: #3f3f46;
+      --cs-checker-b: #27272a;
+      --cs-hairline: rgb(255 255 255 / 0.12);
+      --cs-edge: rgb(255 255 255 / 0.14);
+      }
+  }
+
+  [data-colorshot] *,
+  [data-colorshot] *::before,
+  [data-colorshot] *::after {
+    box-sizing: border-box;
+  }
+
+  [data-colorshot] button,
+  [data-colorshot] input,
+  [data-colorshot] select {
+    font: inherit;
+    color: inherit;
+    margin: 0;
+  }
+
+  [data-colorshot] button {
+    cursor: pointer;
+    border: 0;
+    background: none;
+    padding: 0;
+  }
+
+  [data-colorshot] :focus-visible {
+    outline: 2px solid var(--cs-accent);
+    outline-offset: 2px;
+  }
+
+  [data-colorshot] [data-part="sr-only"] {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+
+  /* every icon inside a control is the same size */
+  [data-colorshot] [data-part="eye-dropper"] svg,
+  [data-colorshot] [data-part="icon-button"] svg,
+  [data-colorshot] [data-part="select-chevron"],
+  [data-colorshot] [data-part="swatch-add"] svg,
+  [data-colorshot] [data-part="swatch-search"] svg,
+  [data-colorshot] [data-part="select-check"] svg,
+  [data-colorshot] [data-part="select-action"] svg,
+  [data-colorshot] [data-part="mode-tabs"] button svg {
+    width: 14px;
+    height: 14px;
+    flex: none;
+  }
+
+  /* --- tooltips --- */
+
+  [data-colorshot] [data-tooltip] {
+    position: relative;
+  }
+
+  [data-colorshot] [data-tooltip]::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    z-index: 40;
+    left: 50%;
+    bottom: calc(100% + 6px);
+    padding: 4px 7px;
+    border-radius: var(--cs-radius-control);
+    background: var(--cs-fg);
+    color: var(--cs-bg);
+    font-size: var(--cs-font-size-sm);
+    font-weight: 500;
+    line-height: 1.2;
+    white-space: nowrap;
+    pointer-events: none;
+    opacity: 0;
+    transform: translate(-50%, 3px);
+    transition: opacity var(--cs-motion-fast), transform var(--cs-motion-fast) var(--cs-ease);
+  }
+
+  [data-colorshot] [data-tooltip]:hover::after,
+  [data-colorshot] [data-tooltip]:focus-visible::after {
+    opacity: 1;
+    transform: translate(-50%, 0);
+    transition-delay: 0.4s;
+  }
+
+  /* first and last controls of a row: the tooltip lines up with that edge instead of running past the panel */
+  [data-colorshot] [data-part="slider-row"] > [data-tooltip]:first-child::after,
+  [data-colorshot] [data-part="current"] > [data-tooltip]:first-child::after {
+    left: 0;
+    transform: translate(0, 3px);
+  }
+
+  [data-colorshot] [data-part="gradient-controls"] > :last-child [data-tooltip]::after,
+  [data-colorshot] [data-part="gradient-controls"] > [data-tooltip]:last-child::after,
+  [data-colorshot] [data-part="swatch-header"] > [data-tooltip]:last-child::after {
+    left: auto;
+    right: 0;
+    transform: translate(0, 3px);
+  }
+
+  [data-colorshot] [data-part="slider-row"] > [data-tooltip]:first-child:is(:hover, :focus-visible)::after,
+  [data-colorshot] [data-part="current"] > [data-tooltip]:first-child:is(:hover, :focus-visible)::after,
+  [data-colorshot] [data-part="gradient-controls"] > :last-child [data-tooltip]:is(:hover, :focus-visible)::after,
+  [data-colorshot] [data-part="gradient-controls"] > [data-tooltip]:last-child:is(:hover, :focus-visible)::after,
+  [data-colorshot] [data-part="swatch-header"] > [data-tooltip]:last-child:is(:hover, :focus-visible)::after {
+    transform: translate(0, 0);
+  }
+
+  [data-colorshot] [data-tooltip]:active::after,
+  /* Escape hid it (WCAG 1.4.13); it comes back once the pointer leaves or focus moves */
+  [data-colorshot] [data-tooltip][data-tooltip-hidden]::after {
+    opacity: 0;
+    transition-delay: 0s;
+  }
+
+  [data-colorshot] [data-part="gamut-badge"] {
+    position: absolute;
+    top: 6px;
+    inset-inline-end: 6px;
+    /* 24px: the smallest comfortable target (WCAG 2.5.8) */
+    min-height: 24px;
+    padding-inline: 7px;
+    border-radius: 999px;
+    font-size: var(--cs-font-size-xs);
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    color: #fff;
+    /* opaque enough to read on any color without a backdrop blur, which repaints on every drag frame */
+    background: rgb(0 0 0 / 0.6);
+    cursor: pointer;
+  }
+
+  [data-colorshot] [data-part="gamut-badge"]:hover {
+    background: rgb(0 0 0 / 0.75);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    [data-colorshot] *,
+    [data-colorshot],
+    [data-colorshot-field] {
+      transition: none !important;
+      animation: none !important;
+    }
+  }
+}

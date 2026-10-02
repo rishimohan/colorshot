@@ -1,0 +1,346 @@
+@layer colorshot {
+  /* --- gradient editor: pins above a bar, then one row of controls --- */
+
+  /* slides open when switching from solid to a gradient (not when the picker opens on one); clipping lasts only for the animation */
+  [data-colorshot] [data-part="gradient-editor"] {
+    display: grid;
+    grid-template-rows: 1fr;
+  }
+
+  [data-colorshot] [data-part="gradient-editor"][data-reveal] {
+    animation: cs-reveal var(--cs-motion) var(--cs-ease);
+  }
+
+  @keyframes cs-reveal {
+    from {
+      grid-template-rows: 0fr;
+      opacity: 0;
+      /* takes back the gap above it too, so the panel grows smoothly from its solid height */
+      margin-block-start: calc(-1 * var(--cs-gap));
+    }
+  }
+
+  [data-colorshot] [data-part="gradient-editor-inner"] {
+    display: flex;
+    flex-direction: column;
+    gap: var(--cs-gap);
+    min-height: 0;
+  }
+
+  [data-colorshot] [data-part="gradient-editor"][data-reveal] > [data-part="gradient-editor-inner"] {
+    animation: cs-clip var(--cs-motion);
+  }
+
+  /* clip only the height while it opens: pins and their rings at 0% and 100% reach the panel edges */
+  @keyframes cs-clip {
+    from,
+    to {
+      overflow: visible clip;
+    }
+  }
+
+  /*
+   * Stops sit on the bar. The bar spans the full width; its inline padding (--_cs-cap: half a stop plus the 3px
+   * gap above and below) is the track the stops travel, so stops at 0% and 100% keep the same 3px from the ends.
+   * Scripts read that padding to map the pointer. The gradient is painted over the track only; the ends show
+   * the first and last colors, which is what CSS paints before and after the stops.
+   */
+  [data-colorshot] [data-part="gradient-bar"] {
+    --_cs-pin: 18px;
+    --_cs-cap: calc(var(--_cs-pin) / 2 + 3px);
+    position: relative;
+    height: calc(var(--_cs-pin) + 6px);
+    padding-inline: var(--_cs-cap);
+    /* concentric with the round stops: their radius plus the 3px around them (a pill, like the sliders) */
+    border-radius: var(--_cs-cap);
+    background:
+      var(--_cs-track) var(--_cs-cap) 0 / calc(100% - 2 * var(--_cs-cap)) 100% no-repeat,
+      linear-gradient(90deg, var(--_cs-track-start, transparent) 50%, var(--_cs-track-end, transparent) 50%),
+      var(--cs-checker);
+    box-shadow: inset 0 0 0 1px var(--cs-edge);
+    touch-action: none;
+    cursor: copy;
+  }
+
+  [data-colorshot] [data-part="gradient-bar"]::before {
+    inset: -6px 0;
+  }
+
+  /* stops: round handles in their own color, on the bar */
+  [data-colorshot] [data-part="gradient-bar"] > [data-part="stop"] {
+    --cs-thumb: var(--_cs-pin);
+    translate: calc(var(--_cs-cap) + var(--_cs-x) * 100cqw - 50%) calc(50cqh - 50%);
+    background: linear-gradient(var(--_cs-stop-color), var(--_cs-stop-color)), var(--cs-checker);
+    cursor: grab;
+  }
+
+  [data-colorshot] [data-part="gradient-bar"] > [data-part="stop"]:hover {
+    scale: 1.08;
+  }
+
+  /*
+   * Selected: an accent ring plus a slight growth, so it still reads when the stop, the bar and the accent are
+   * the same color. The 3px clearance around stops leaves room for both.
+   */
+  [data-colorshot] [data-part="gradient-bar"] > [data-part="stop"][data-state="selected"] {
+    z-index: 1;
+    scale: 1.12;
+    box-shadow: 0 0 0 2px var(--cs-accent), 0 3px 10px rgb(0 0 0 / 0.28);
+  }
+
+  /* focused and selected: the selected ring, a gap, then the focus ring outside it */
+  [data-colorshot] [data-part="gradient-bar"] > [data-part="stop"][data-state="selected"]:focus-visible {
+    box-shadow: 0 0 0 2px var(--cs-accent), 0 0 0 4px var(--cs-bg), 0 0 0 6px var(--cs-accent);
+  }
+
+  /* the bar holds the pointer while a stop is dragged, so its cursor is the one shown: grabbing, not add */
+  [data-colorshot] [data-part="gradient-bar"][data-dragging],
+  [data-colorshot] [data-part="gradient-bar"][data-dragging] * {
+    cursor: grabbing;
+  }
+
+  [data-colorshot] [data-part="gradient-bar"][data-dragging] > [data-part="stop"][data-state="selected"] {
+    cursor: grabbing;
+    scale: 1.2;
+  }
+
+  /* only stops added after the bar appears */
+  [data-colorshot] [data-part="stop"][data-enter] {
+    animation: cs-stop-in var(--cs-motion-fast) var(--cs-ease);
+  }
+
+  @keyframes cs-stop-in {
+    from {
+      scale: 0.6;
+      opacity: 0;
+    }
+  }
+
+  [data-colorshot] [data-part="stop"][data-removing] {
+    opacity: 0.35;
+    scale: 0.8;
+  }
+
+  /* hover marker on the bar where a click adds a stop */
+  [data-colorshot] [data-part="gradient-bar"]::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    translate: calc(var(--_cs-cap) + var(--_cs-hover-x, 0) * 100cqw - 50%) 0;
+    width: 2px;
+    height: 100%;
+    border-radius: 2px;
+    background: #fff;
+    box-shadow: 0 0 0 1px rgb(0 0 0 / 0.25);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--cs-motion-fast);
+  }
+
+  [data-colorshot] [data-part="gradient-bar"]:hover::after {
+    opacity: 0.95;
+  }
+
+  [data-colorshot] [data-part="gradient-bar"]:has([data-part="stop"]:hover)::after,
+  [data-colorshot] [data-part="gradient-bar"][data-dragging]::after {
+    opacity: 0;
+  }
+
+  [data-colorshot] [data-part="stop-label"] {
+    position: absolute;
+    left: 50%;
+    bottom: calc(100% + 6px);
+    padding: 2px 5px;
+    border-radius: var(--cs-radius-inner);
+    background: var(--cs-fg);
+    color: var(--cs-bg);
+    font-size: var(--cs-font-size-xs);
+    font-weight: 600;
+    line-height: 1.3;
+    white-space: nowrap;
+    pointer-events: none;
+    opacity: 0;
+    transform: translate(-50%, 3px);
+    transition: opacity var(--cs-motion-fast), transform var(--cs-motion-fast) var(--cs-ease);
+  }
+
+  [data-colorshot] [data-part="stop"][data-active] [data-part="stop-label"],
+  [data-colorshot] [data-part="stop"]:focus-visible [data-part="stop-label"] {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+
+  /* --- the controls row --- */
+
+  [data-colorshot] [data-part="gradient-controls"] {
+    display: flex;
+    align-items: center;
+    gap: var(--cs-gap-inline);
+    min-width: 0;
+  }
+
+  [data-colorshot] [data-part="spacer"] {
+    flex: 1 1 0;
+    min-width: 0;
+  }
+
+  [data-colorshot] [data-part="angle-dial"] {
+    position: relative;
+    flex: none;
+    width: var(--cs-control);
+    height: var(--cs-control);
+    border-radius: 50%;
+    background: transparent;
+    box-shadow: inset 0 0 0 1px var(--cs-hairline);
+    touch-action: none;
+    cursor: grab;
+  }
+
+  [data-colorshot] [data-part="angle-dial"][data-dragging] {
+    cursor: grabbing;
+  }
+
+  [data-colorshot] [data-part="angle-handle"] {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    transform: rotate(var(--_cs-angle));
+    outline: none;
+  }
+
+  [data-colorshot] [data-part="angle-handle"]::before {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 7px;
+    bottom: 50%;
+    width: 1.5px;
+    margin-left: -0.75px;
+    background: var(--cs-muted);
+  }
+
+  [data-colorshot] [data-part="angle-handle"]::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 3px;
+    width: 6px;
+    height: 6px;
+    margin-left: -3px;
+    border-radius: 50%;
+    background: var(--cs-fg);
+  }
+
+  [data-colorshot] [data-part="angle-handle"]:focus-visible {
+    box-shadow: 0 0 0 2px var(--cs-bg), 0 0 0 4px var(--cs-accent);
+  }
+
+  /* center of a radial / conic gradient: a control-sized pad showing the gradient */
+  [data-colorshot] [data-part="center-pad"] {
+    position: relative;
+    flex: none;
+    width: var(--cs-control);
+    height: var(--cs-control);
+    border-radius: var(--cs-radius-control);
+    background: var(--_cs-preview), var(--cs-checker);
+    box-shadow: inset 0 0 0 1px var(--cs-border);
+    touch-action: none;
+    cursor: move;
+  }
+
+  [data-colorshot] [data-part="center-pad"][data-disabled] {
+    cursor: default;
+  }
+
+  [data-colorshot] [data-part="center-handle"] {
+    --cs-thumb: 9px;
+    --_cs-thumb-color: transparent;
+    border-width: 1.5px;
+  }
+
+  /* equal columns so the sliding indicator matches each option */
+  [data-colorshot] [data-part="gradient-controls"] [data-part="segmented"] {
+    flex: 0 1 156px;
+    min-width: 0;
+  }
+
+  [data-colorshot] [data-part="gradient-controls"] [data-part="segmented"] button {
+    padding-inline: 8px;
+    gap: 6px;
+    font-size: var(--cs-font-size-sm);
+  }
+
+  [data-colorshot] [data-part="shape-icon"] {
+    width: 11px;
+    height: 11px;
+    border: 1.5px solid currentColor;
+    border-radius: 50%;
+  }
+
+  [data-colorshot] [data-part="shape-icon"][data-shape="ellipse"] {
+    width: 14px;
+    height: 9px;
+  }
+
+  [data-colorshot] [data-part="icon-button"] {
+    display: grid;
+    place-items: center;
+    flex: none;
+    width: var(--cs-control);
+    height: var(--cs-control);
+    border-radius: var(--cs-radius-control);
+    color: var(--cs-muted);
+    transition: background var(--cs-motion-fast), color var(--cs-motion-fast), transform var(--cs-motion-fast);
+  }
+
+  [data-colorshot] [data-part="icon-button"]:hover:not(:disabled),
+  [data-colorshot] [data-part="icon-button"][data-state="open"] {
+    background: var(--cs-surface);
+    color: var(--cs-fg);
+  }
+
+  [data-colorshot] [data-part="icon-button"]:disabled {
+    opacity: 0.35;
+    cursor: default;
+  }
+
+  [data-colorshot] [data-part="icon-button"][data-size="sm"] {
+    width: calc(var(--cs-control) - 6px);
+    height: calc(var(--cs-control) - 6px);
+  }
+
+  /* --- menu (gradient options) --- */
+
+  [data-colorshot] [data-part="menu"] {
+    position: relative;
+    flex: none;
+  }
+
+  [data-colorshot] [data-part="menu"][data-align="end"] [data-part="select-menu"] {
+    left: auto;
+    right: 0;
+    transform-origin: top right;
+  }
+
+  /* the menu takes focus when it opens; a mouse open shows no ring, the keyboard one does */
+  [data-colorshot] [data-part="menu"] [data-part="select-menu"]:focus:not(:focus-visible) {
+    outline: none;
+  }
+
+  [data-colorshot] [data-part="menu-separator"] {
+    height: 1px;
+    margin: 4px 2px;
+    background: var(--cs-border);
+  }
+
+  [data-colorshot] [data-part="select-option"][aria-disabled="true"] {
+    opacity: 0.4;
+    cursor: default;
+  }
+
+  [data-colorshot] [data-part="select-option"] [data-part="select-check"] svg {
+    width: 14px;
+    height: 14px;
+  }
+}

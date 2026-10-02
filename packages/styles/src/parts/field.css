@@ -1,0 +1,93 @@
+@layer colorshot {
+  /* --- ColorField trigger and popover --- */
+
+  [data-colorshot-field] {
+    box-sizing: border-box;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+    height: 32px;
+    padding: 0 10px 0 5px;
+    border: 1px solid var(--cs-border);
+    border-radius: var(--cs-radius-sm);
+    background: var(--cs-bg);
+    color: var(--cs-fg);
+    font: inherit;
+    font-size: var(--cs-field-font-size, 13px);
+    font-variant-numeric: tabular-nums;
+    text-align: left;
+    cursor: pointer;
+    transition: border-color var(--cs-motion-fast), box-shadow var(--cs-motion-fast);
+  }
+
+  [data-colorshot-field]:hover {
+    border-color: color-mix(in srgb, var(--cs-fg) 22%, transparent);
+  }
+
+  [data-colorshot-field][data-state="open"] {
+    outline: none;
+    border-color: var(--cs-accent);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--cs-accent) 22%, transparent);
+  }
+
+  /* keyboard focus: a solid ring past a gap, visible next to any page color */
+  [data-colorshot-field]:focus-visible {
+    outline: none;
+    border-color: var(--cs-accent);
+    box-shadow: 0 0 0 2px var(--cs-bg), 0 0 0 4px var(--cs-accent);
+  }
+
+  [data-colorshot-field]:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  [data-colorshot-field] [data-part="field-swatch"] {
+    position: relative;
+    flex: none;
+    width: 22px;
+    height: 22px;
+    /* concentric with the trigger: its radius minus the 5px around the swatch */
+    border-radius: calc(var(--cs-radius-sm) - 5px);
+    overflow: hidden;
+    background: var(--cs-checker);
+  }
+
+  [data-colorshot-field] [data-part="field-swatch"]::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: var(--_cs-swatch);
+    box-shadow: inset 0 0 0 1px var(--cs-edge);
+    border-radius: inherit;
+  }
+
+  [data-colorshot-field] [data-part="field-text"] {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+
+  [data-colorshot-field] [data-part="field-alpha"] {
+    flex: none;
+    color: var(--cs-muted);
+  }
+
+  [data-colorshot-popover] {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+  }
+
+  [data-colorshot-popover] > [data-colorshot] {
+    animation: cs-pop var(--cs-motion) var(--cs-ease);
+  }
+
+  [data-colorshot-popover][data-side="top"] > [data-colorshot] {
+    transform-origin: bottom left;
+  }
+}

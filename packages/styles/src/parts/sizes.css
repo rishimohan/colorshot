@@ -1,0 +1,74 @@
+@layer colorshot {
+  /* Compact size for tight inspector panels: <ColorPicker size="sm" /> */
+  [data-colorshot][data-size="sm"] {
+    --cs-width: 240px;
+    --cs-padding: 10px;
+    --cs-gap: 8px;
+    --cs-control: 24px;
+    --cs-thumb: 16px;
+    --cs-track-height: 10px;
+    --cs-area-height: 152px;
+    --cs-font-size: 11px;
+    --cs-font-size-sm: 10.5px;
+    --cs-font-size-xs: 9.5px;
+    --cs-radius: 10px;
+    --cs-radius-control: 5px;
+  }
+
+  [data-colorshot][data-size="sm"] [data-part="field"] {
+    padding-inline: 5px;
+  }
+
+  [data-colorshot][data-size="sm"] [data-part="field"][data-field="alpha"] {
+    padding-inline: 5px;
+  }
+
+  /* six-character channels (OKLab -0.400) need every pixel at 240px */
+  [data-colorshot][data-size="sm"] [data-field="channel"] {
+    padding-inline: 1px;
+  }
+
+  [data-colorshot][data-size="sm"] [data-part="gradient-bar"] {
+    --_cs-pin: 16px;
+  }
+
+  /* the compact row is too narrow for icon and label: keep the words */
+  [data-colorshot][data-size="sm"] [data-part="shape-icon"] {
+    display: none;
+  }
+
+  [data-colorshot][data-size="sm"] [data-part="select-trigger"] {
+    padding-left: 6px;
+  }
+
+  /* before / after halves stay 24px targets (WCAG 2.5.8) on the smaller controls */
+  [data-colorshot][data-size="sm"] [data-part="current"][data-compare] {
+    width: max(calc(var(--cs-control) * 1.7), 48px);
+  }
+
+  [data-colorshot][data-size="sm"] [data-part="current"][data-compare] > * {
+    min-width: 24px;
+  }
+
+  /* Touch screens: bigger thumbs, tracks and targets */
+  @media (pointer: coarse) {
+    [data-colorshot] {
+      --cs-thumb: 24px;
+      --cs-track-height: 16px;
+      --cs-control: 34px;
+      --cs-gap: 12px;
+    }
+
+    [data-colorshot] [data-slider]::before {
+      inset: -10px calc(var(--cs-thumb) / -2);
+    }
+
+    [data-colorshot] [data-part="gradient-bar"] {
+      --_cs-pin: 24px;
+    }
+
+    [data-colorshot] [data-part="gradient-bar"]::before {
+      inset: -10px 0;
+    }
+  }
+}
