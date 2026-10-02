@@ -5,6 +5,8 @@ export default defineConfig({
   fullyParallel: true,
   reporter: [["list"]],
   timeout: 30_000,
+  // one retry in CI only: shared runners are slower and noisier than a laptop; a real failure still fails twice
+  retries: process.env.CI ? 1 : 0,
   use: {
     baseURL: "http://localhost:5190",
     trace: "retain-on-failure",

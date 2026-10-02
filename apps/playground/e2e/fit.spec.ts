@@ -8,6 +8,8 @@ const VALUES = ["color(display-p3 0.123 0.456 0.789 / 0.5)", "oklch(0.627 0.257 
 
 for (const size of ["md", "sm"] as const) {
   test(`no clipped text in any format (${size})`, async ({ page }) => {
+    // 10 formats x 4 values, each opened through the menu: slow on WebKit for Linux in CI
+    test.setTimeout(120_000);
     await openHarness(page);
     const root = page.getByTestId(`picker-formats-${size}`);
     await root.scrollIntoViewIfNeeded();

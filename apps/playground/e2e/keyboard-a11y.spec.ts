@@ -29,12 +29,17 @@ test.describe("gradient stops from the keyboard", () => {
   });
 
   test("Enter adds a stop halfway to the next one and focuses it; + and the menu add one too", async ({ page }) => {
+    // the toast clears after 1.4s, which a slow runner can pass before the assertion: record every text it shows
+    await part(full(page), "toast").evaluate((el) => {
+      const seen: string[] = ((window as unknown as { toastTexts: string[] }).toastTexts = []);
+      new MutationObserver(() => el.textContent && seen.push(el.textContent)).observe(el, { childList: true, subtree: true, characterData: true });
+    });
     await stops(page).first().focus();
     await page.keyboard.press("Enter");
     await expect(stops(page)).toHaveCount(4);
     await expect.poll(() => focusedStopNow(page)).toBe("25");
     expect((await log(page, "full")).completes).toHaveLength(1);
-    await expect(part(full(page), "toast")).toHaveText("Stop added");
+    await expect.poll(() => page.evaluate(() => (window as unknown as { toastTexts: string[] }).toastTexts)).toContain("Stop added");
     // the toast stays hidden: the message is for screen readers
     await expect(part(full(page), "toast")).toHaveAttribute("data-state", "hidden");
 
