@@ -67,6 +67,134 @@ const fill = ref("#3E5CEB");
 </template>
 ```
 
+## Examples
+
+Live versions of every example: https://orshot.com/open-source/colorshot#linear
+
+### Linear, radial or conic gradient only
+
+One mode hides the tabs. `value` is any CSS gradient, and the picker writes one back.
+
+```tsx
+<ColorPicker value={value} onChange={setValue} modes={["linear"]} />
+// value: "linear-gradient(90deg, #22C55E 0%, #3E5CEB 100%)"
+
+<ColorPicker value={value} onChange={setValue} modes={["radial"]} />
+// value: "radial-gradient(circle at 30% 30%, #FDE68A 0%, #F97316 45%, #BE123C 100%)"
+
+<ColorPicker value={value} onChange={setValue} modes={["conic"]} />
+// value: "conic-gradient(from 0deg at 50% 50%, #EF4444, #F59E0B, #22C55E, #3B82F6, #A855F7, #EF4444)"
+```
+
+Repeating gradients (`repeating-linear-gradient(...)` and the rest) work the same way; toggle Repeating in the `...` menu.
+
+### Gradients only
+
+For backgrounds that must be a gradient. `defaultGradient` is what a solid value turns into.
+
+```tsx
+<ColorPicker
+  value={value}
+  onChange={setValue}
+  modes={["linear", "radial", "conic"]}
+  defaultGradient="linear-gradient(90deg, #3E5CEB 0%, #22C55E 100%)"
+  gradientPresets
+/>
+```
+
+### Solid colors, no transparency
+
+```tsx
+<ColorPicker value={value} onChange={setValue} modes={["solid"]} alpha={false} formats={["hex", "rgb", "hsl"]} />
+```
+
+### Text color with a contrast check
+
+Shows the WCAG ratio and draws the AA line on the color area.
+
+```tsx
+<ColorPicker value={value} onChange={setValue} modes={["solid"]} alpha={false} contrastWith="#FFFFFF" />
+```
+
+### OKLCH and wide gamut
+
+```tsx
+<ColorPicker
+  value={value} // "oklch(0.62 0.2 265)"
+  onChange={setValue}
+  modes={["solid"]}
+  space="oklch"
+  formats={["oklch", "hex", "rgb"]}
+  outputFormat="oklch"
+/>
+```
+
+### Undo and before / after
+
+```tsx
+<ColorPicker value={value} onChange={setValue} history compare />
+```
+
+### Saving changes
+
+`onChange` fires on every frame of a drag. Update the preview there, and save in `onChangeComplete`, which fires once.
+
+```tsx
+<ColorPicker
+  value={layer.fill}
+  onChange={(fill) => updateLayerPreview(layer.id, { fill })}
+  onChangeComplete={(fill) => saveLayer(layer.id, { fill })}
+/>
+```
+
+### In a form
+
+`ColorField` takes a value and an onChange like an input, so it works with any form library:
+
+```tsx
+import { Controller, useForm } from "react-hook-form";
+import { ColorField } from "@orshot/colorshot/react";
+
+const { control, handleSubmit } = useForm({ defaultValues: { accent: "#3E5CEB" } });
+
+<Controller
+  name="accent"
+  control={control}
+  render={({ field }) => (
+    <ColorField label="Accent" value={field.value} onChange={field.onChange} modes={["solid"]} alpha={false} />
+  )}
+/>;
+```
+
+### Match a stored format
+
+Keep whatever format your app already stores. Here: uppercase hex when opaque, comma `rgba()` otherwise.
+
+```tsx
+import { formatColor } from "@orshot/colorshot";
+
+const outputFormat = (color) =>
+  color.alpha >= 1
+    ? formatColor({ ...color, alpha: 1 }, "hex", { upper: true })
+    : formatColor(color, "rgb", { legacy: true, fn: "rgba" });
+
+<ColorPicker value={value} onChange={setValue} outputFormat={outputFormat} />;
+```
+
+### shadcn/ui theme
+
+```css
+/* globals.css. On shadcn/ui v3 (HSL channel tokens) wrap them: hsl(var(--primary)) */
+[data-colorshot],
+[data-colorshot-field] {
+  --cs-accent: var(--primary);
+  --cs-bg: var(--popover);
+  --cs-fg: var(--popover-foreground);
+  --cs-border: var(--border);
+  --cs-radius: var(--radius);
+}
+```
+
 ## Using with AI
 
 Install the Colorshot skill to teach your coding agent (Claude Code, Codex, Cursor, GitHub Copilot and others) how to add and configure the picker:

@@ -63,6 +63,21 @@ contrastRatio("#64748b", "#ffffff"); // 4.758...
 isSafeCssValue(storedValue); // validate stored values before writing them into HTML or CSS
 ```
 
+## Common setups
+
+| Use case | Props |
+| --- | --- |
+| Linear gradient only | `modes={["linear"]}` |
+| Radial or conic only | `modes={["radial"]}`, `modes={["conic"]}` |
+| Gradients, no solid | `modes={["linear", "radial", "conic"]} gradientPresets` |
+| Solid, no transparency | `modes={["solid"]} alpha={false}` |
+| Text color with WCAG check | `modes={["solid"]} alpha={false} contrastWith="#FFFFFF"` |
+| OKLCH editing | `space="oklch" outputFormat="oklch"` |
+| Undo and before / after | `history compare` |
+| Compact inspector panel | `size="sm"` |
+
+Live examples of each: https://orshot.com/open-source/colorshot#linear
+
 ## Only what you import
 
 - `@orshot/colorshot/react` and `@orshot/colorshot/vue` are separate entries: a React app never bundles the Vue code.
