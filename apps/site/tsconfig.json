@@ -1,0 +1,23 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "noEmit": true,
+    "types": [
+      "vite/client"
+    ],
+    "paths": {
+      "@orshot/colorshot": [
+        "../../packages/core/src/index.ts"
+      ],
+      "@orshot/colorshot/react": [
+        "../../packages/react/src/index.ts"
+      ],
+      "@orshot/colorshot/vue": [
+        "../../packages/vue/src/index.ts"
+      ]
+    }
+  },
+  "include": [
+    "src"
+  ]
+}

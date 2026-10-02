@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Colorshot · Color and gradient picker for React and Vue</title>
+    <meta name="description" content="Color and gradient picker for React and Vue. Every CSS color format, every gradient type. Open source, by Orshot." />
+    <meta property="og:title" content="Colorshot" />
+    <meta property="og:description" content="Color and gradient picker for React and Vue. Every CSS color format, every gradient type." />
+    <meta property="og:url" content="https://colorshot.orshot.com" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+    <script>
+      // apply the saved theme before first paint
+      try {
+        var t = localStorage.getItem("colorshot-site-theme");
+        if (t === "light" || t === "dark") document.documentElement.dataset.theme = t;
+      } catch (e) {}
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
