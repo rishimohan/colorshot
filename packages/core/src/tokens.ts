@@ -3,6 +3,7 @@
 
 /** Split on a separator at nesting depth 0 (parentheses and quotes respected). `" "` splits on any whitespace run. */
 export function splitTopLevel(input: string, sep: "," | "/" | " "): string[] {
+  if (typeof input !== "string") return [];
   const out: string[] = [];
   let depth = 0;
   let quote = "";

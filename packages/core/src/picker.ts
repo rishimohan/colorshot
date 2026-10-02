@@ -508,6 +508,6 @@ export class PickerStore {
 }
 
 export function createPicker(options?: PickerOptions): PickerStore {
-  return new PickerStore(options);
+  return new PickerStore(options ?? undefined);
 }
 

@@ -133,3 +133,9 @@ describe("contrast", () => {
     expect(contrastRatio("linear-gradient(#000, #fff)", "#fff")).toBeCloseTo(1, 1);
   });
 });
+
+describe("hardened helpers", () => {
+  it("formatColor falls back to hex for an unknown format", () => {
+    expect(formatColor(parseColor("#3e5ceb")!.color, "nope" as never)).toBe("#3e5ceb");
+  });
+});

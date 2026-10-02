@@ -27,4 +27,13 @@ describe("gradient handles", () => {
     const c = gradientHandles("conic-gradient(from 90deg at 50% 50%, red, blue)", 100, 100)!;
     expect(c.handles.map((h) => h.id)).toEqual(["center", "angle"]);
   });
+
+  it("never throws on bad ids or coordinates", () => {
+    const value = "linear-gradient(90deg, #000 0%, #fff 100%)";
+    for (const id of [null, undefined, 1, {}, "nope"] as unknown as string[]) {
+      expect(moveGradientHandle(value, id, 10, 10, 100, 100)).toBe(value);
+    }
+    expect(moveGradientHandle(value, "end", NaN, 10, 100, 100)).toBe(value);
+    expect(gradientHandles(value, NaN, 100)).toBeNull();
+  });
 });

@@ -56,6 +56,7 @@ function linearLine(g: Gradient, w: number, h: number) {
 
 /** Handles to draw for the first gradient in `value` on an element `width` × `height` px. */
 export function gradientHandles(value: string, width: number, height: number): GradientHandles | null {
+  if (!Number.isFinite(width) || !Number.isFinite(height)) return null;
   const found = firstGradient(value);
   if (!found) return null;
   const g = found.gradient;
@@ -102,6 +103,8 @@ export function moveGradientHandle(
   height: number,
   options: { snap?: boolean } = {},
 ): string {
+  // called from pointer handlers with whatever the host has: bad ids or coordinates leave the value as it is
+  if (typeof id !== "string" || ![x, y, width, height].every(Number.isFinite)) return value;
   const found = firstGradient(value);
   if (!found) return value;
   let g = found.gradient;

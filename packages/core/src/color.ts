@@ -295,6 +295,12 @@ function alphaPart(alpha: number, legacy: boolean): string {
 }
 
 /** Write a color in a format. sRGB formats (hex, rgb, hsl, hwb) are gamut mapped first. */
+// spaces formatColor can write as color(<space> ...) or a named function
+const FORMAT_SPACES = /* @__PURE__ */ new Set<string>([
+  "srgb", "srgb-linear", "display-p3", "a98-rgb", "prophoto-rgb", "rec2020", "xyz-d65", "xyz-d50",
+  "hsl", "hwb", "lab", "lch", "oklab", "oklch",
+]);
+
 export function formatColor(color: Color, format: ColorFormat, style: FormatStyle = {}): string {
   const a = Math.min(1, Math.max(0, color.alpha));
   switch (format) {
@@ -340,6 +346,8 @@ export function formatColor(color: Color, format: ColorFormat, style: FormatStyl
     }
     default: {
       const target = format as ColorSpace;
+      // a format this build does not know (a typo, a newer name): plain hex rather than a throw
+      if (!FORMAT_SPACES.has(target)) return formatColor(color, "hex", style);
       const coords = convert(color, target).coords.map((v) => num(v, 5));
       const name = target === "xyz-d65" ? "xyz-d65" : target;
       return `color(${name} ${coords.join(" ")}${alphaPart(a, false)})`;
