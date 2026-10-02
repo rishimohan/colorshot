@@ -59,8 +59,14 @@ const SHAPES = new Set(["circle", "ellipse"]);
 const EXTENTS = new Set(["closest-side", "closest-corner", "farthest-side", "farthest-corner"]);
 const HUE_METHODS = new Set(["shorter", "longer", "increasing", "decreasing"]);
 
-let idCounter = 0;
-export const newStopId = () => `s${++idCounter}`;
+// Stop ids are numbered per gradient (s1, s2, ...), never from a global counter: a picker rendered on the server
+// and hydrated in the browser must give every stop the same id on both sides.
+function nextStopId(g: Gradient): string {
+  const used = new Set(getStops(g).map((s) => s.id));
+  let n = used.size + 1;
+  while (used.has(`s${n}`)) n++;
+  return `s${n}`;
+}
 
 export function isGradient(value: string): boolean {
   return typeof value === "string" && /(?:^|[\s,(])(?:-(?:webkit|moz|o|ms)-)?(?:repeating-)?(?:linear|radial|conic)-gradient\(/i.test(value);
@@ -184,7 +190,7 @@ function parsePrelude(g: Gradient, text: string): boolean {
   return true;
 }
 
-function parseItem(arg: string): GradientItem | null {
+function parseItem(arg: string, id: string): GradientItem | null {
   const tokens = splitTopLevel(arg, " ");
   if (tokens.length === 0) return null;
   if (tokens.length === 1 && !looksLikeColor(tokens[0]) && isPositionToken(tokens[0])) {
@@ -198,7 +204,7 @@ function parseItem(arg: string): GradientItem | null {
     rest = tokens.slice(0, -1);
   }
   if (rest.length > 2 || !looksLikeColor(color) || !rest.every(isPositionToken)) return null;
-  return { kind: "stop", id: newStopId(), color, positions: rest.map(toPosition) };
+  return { kind: "stop", id, color, positions: rest.map(toPosition) };
 }
 
 /** Parse one gradient function. Never throws; returns null if the text is not a gradient we can edit. */
@@ -232,8 +238,10 @@ export function parseGradient(input: string): Gradient | null {
     g.preludeRaw = args[0];
     args.shift();
   }
+  let stopCount = 0;
   for (const arg of args) {
-    const item = parseItem(arg);
+    const item = parseItem(arg, `s${stopCount + 1}`);
+    if (item?.kind === "stop") stopCount++;
     if (!item) return null;
     g.items.push(item);
   }
@@ -505,7 +513,7 @@ export function addStop(
       css = formatColor(c, fmt?.keyword ? "hex" : fmt?.format ?? "hex", fmt?.style);
     }
   }
-  const id = newStopId();
+  const id = nextStopId(base);
   const stop: GradientStop = { kind: "stop", id, color: css, positions: [makePosition(t * 100, "%")] };
   const offsets = stopOffsets(base);
   const stops = getStops(base);

@@ -70,6 +70,24 @@ describe("broken input never throws", () => {
   });
 });
 
+describe("stop ids", () => {
+  it("are the same every time a value is read, so server and browser render the same markup", () => {
+    const value = "linear-gradient(90deg, #000 0%, #888 50%, #fff 100%)";
+    const ids = () => getStops(parseGradient(value)!).map((s) => s.id);
+    expect(ids()).toEqual(["s1", "s2", "s3"]);
+    expect(ids()).toEqual(ids());
+    expect(createPicker({ value }).getState().stops.map((s) => s.id)).toEqual(["s1", "s2", "s3"]);
+  });
+
+  it("stay unique when stops are added", () => {
+    const picker = createPicker({ value: "linear-gradient(90deg, #000 0%, #fff 100%)" });
+    picker.addStop(0.25);
+    picker.addStop(0.75);
+    const ids = picker.getState().stops.map((s) => s.id);
+    expect(new Set(ids).size).toBe(ids.length);
+  });
+});
+
 describe("values that are not text never throw", () => {
   // hosts pass whatever their data holds: a number from a bad import, an object, null
   const notText = [123, null, undefined, {}, [], true, NaN] as unknown as string[];
