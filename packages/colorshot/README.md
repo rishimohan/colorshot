@@ -1,5 +1,7 @@
 # @orshot/colorshot
 
+![Colorshot, a color and gradient picker for React and Vue](https://raw.githubusercontent.com/rishimohan/colorshot/main/.github/assets/cover.png)
+
 Color and gradient picker for React and Vue, by [Orshot](https://orshot.com). Solid, linear, radial and conic gradients, every CSS color format including OKLCH and Display P3, swatches, eyedropper, WCAG contrast and a popover field. Accessible (keyboard, screen readers, high contrast, RTL), themeable with CSS variables, and it only reads and writes plain CSS strings.
 
 ```bash
@@ -67,4 +69,18 @@ isSafeCssValue(storedValue); // validate stored values before writing them into 
 - React and Vue are optional peer dependencies.
 - `sideEffects` is limited to the stylesheet, so unused parts tree-shake away.
 
-Docs, live examples and the full API: https://colorshot.orshot.com · MIT
+## Using with AI
+
+Teach your coding agent (Claude Code, Codex, Cursor, GitHub Copilot and others) how to add and configure the picker:
+
+```sh
+npx skills add rishimohan/colorshot
+```
+
+The package also ships `llms.txt`, a compact API reference for LLMs.
+
+Docs, live examples and the full API: https://orshot.com/open-source/colorshot
+
+---
+
+Brought to you by [Orshot](https://orshot.com). MIT License, see `LICENSE` and `THIRD-PARTY-NOTICES.md`.

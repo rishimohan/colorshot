@@ -1,0 +1,43 @@
+name: Bug report
+description: Something in Colorshot does not work as documented
+labels: [bug]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened
+      description: What you did, what you expected, and what you got instead.
+    validations:
+      required: true
+  - type: textarea
+    id: value
+    attributes:
+      label: The value
+      description: The exact CSS string you passed as `value`, if the bug involves a color or gradient.
+      render: css
+  - type: textarea
+    id: repro
+    attributes:
+      label: Reproduction
+      description: A link (StackBlitz, CodeSandbox, a repo) or the smallest code that shows it.
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Colorshot version
+      placeholder: "0.1.0"
+    validations:
+      required: true
+  - type: dropdown
+    id: framework
+    attributes:
+      label: Framework
+      options: [React, Next.js, Vue, No framework (core only)]
+    validations:
+      required: true
+  - type: input
+    id: browser
+    attributes:
+      label: Browser and OS
+      placeholder: "Chrome 140, macOS 26"

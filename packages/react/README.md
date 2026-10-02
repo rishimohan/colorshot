@@ -32,4 +32,4 @@ export function Fill() {
 - Optional: `space="oklch"`, `history`, `swatchSearch`, `gradientPresets`, `contrastWith`, `compare`, `size="sm"`, `variant="inset"`.
 - React 18 and 19. The bundle is marked `"use client"` for the Next.js app router: use the components from client components, and import helpers such as `parseColor` from `@colorshot/core` in server code.
 
-Docs and live examples: https://colorshot.orshot.com · MIT · by [Orshot](https://orshot.com)
+Docs and live examples: https://orshot.com/open-source/colorshot · MIT · by [Orshot](https://orshot.com)

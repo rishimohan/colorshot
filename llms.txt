@@ -138,7 +138,8 @@ Set CSS variables on any parent or on the picker: `--cs-accent`, `--cs-radius`, 
 - Keep the stored value format the user already has. Use `outputFormat` to match it (for example uppercase hex when opaque, `rgba()` otherwise).
 - Save in `onChangeComplete`, not `onChange`.
 - In Next.js, render the picker from a client component.
-- With shadcn/ui, put `ColorField` (or `ColorPicker` inside your own Popover) where a color `Input` was, and theme it with `--cs-accent`.
+- With shadcn/ui, put `ColorField` (or `ColorPicker` inside your own Popover) where a color `Input` was, and map the theme: `[data-colorshot], [data-colorshot-field] { --cs-accent: var(--primary); --cs-bg: var(--popover); --cs-fg: var(--popover-foreground); --cs-border: var(--border); --cs-radius: var(--radius); }` (on shadcn/ui v3 wrap the tokens in `hsl()`).
+- Agent skill: `npx skills add rishimohan/colorshot` installs `skills/colorshot/SKILL.md`.
 
 ## License
 

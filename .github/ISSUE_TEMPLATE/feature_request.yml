@@ -1,0 +1,16 @@
+name: Feature request
+description: Suggest a prop, part or behavior
+labels: [enhancement]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: What you are trying to do
+      description: The use case, not the solution. What does your app need that Colorshot does not do yet?
+    validations:
+      required: true
+  - type: textarea
+    id: idea
+    attributes:
+      label: How it could work
+      description: Optional. New features are opt-in props, so defaults stay the same.

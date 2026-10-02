@@ -26,4 +26,4 @@ const fill = ref("linear-gradient(135deg, #3E5CEB, #22C55E)");
 - `ColorField` supports `v-model:open` and a `#trigger="{ value, open }"` slot.
 - Vue 3.5+.
 
-Docs: https://colorshot.orshot.com/docs/vue · MIT · by [Orshot](https://orshot.com)
+Docs: https://orshot.com/open-source/colorshot · MIT · by [Orshot](https://orshot.com)

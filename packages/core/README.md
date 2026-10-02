@@ -1,6 +1,6 @@
 # @colorshot/core
 
-Framework-free logic behind [Colorshot](https://colorshot.orshot.com): CSS Color 4 parsing and formatting, color space conversion, gamut mapping, a lossless CSS gradient parser, WCAG contrast, on-canvas gradient handles, and the picker state store that the React and Vue packages are built on.
+Framework-free logic behind [Colorshot](https://orshot.com/open-source/colorshot): CSS Color 4 parsing and formatting, color space conversion, gamut mapping, a lossless CSS gradient parser, WCAG contrast, on-canvas gradient handles, and the picker state store that the React and Vue packages are built on.
 
 ```bash
 npm i @colorshot/core
@@ -23,4 +23,4 @@ Zero dependencies. Every gradient part you do not edit is kept exactly as writte
 
 Only plain colors and gradients go in and out: anything else (markup, `url()`, `image-set()`, semicolons, text over 4 KB) is treated as unreadable and never emitted. `isSafeCssValue(value)` is the same check, for validating stored values on your server.
 
-Docs: https://colorshot.orshot.com/docs/core · MIT · by [Orshot](https://orshot.com)
+Docs: https://orshot.com/open-source/colorshot#core · MIT · by [Orshot](https://orshot.com)
