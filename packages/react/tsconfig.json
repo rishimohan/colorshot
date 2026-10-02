@@ -1,0 +1,7 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "paths": { "@colorshot/core": ["../core/src/index.ts"] }
+  },
+  "include": ["src"]
+}

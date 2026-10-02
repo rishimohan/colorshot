@@ -1,0 +1,88 @@
+{
+  "name": "@colorshot/react",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Color and gradient picker for React. Solid, linear, radial and conic gradients, every CSS color format.",
+  "keywords": [
+    "color picker",
+    "gradient",
+    "gradient picker",
+    "oklch",
+    "css colors",
+    "color",
+    "colorshot",
+    "react",
+    "react color picker",
+    "react gradient picker",
+    "color input",
+    "swatches",
+    "eyedropper"
+  ],
+  "homepage": "https://colorshot.orshot.com",
+  "bugs": {
+    "url": "https://github.com/rishimohan/colorshot/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rishimohan/colorshot.git",
+    "directory": "packages/react"
+  },
+  "license": "MIT",
+  "engines": {
+    "node": ">=20"
+  },
+  "author": {
+    "name": "Rishi Mohan",
+    "url": "https://orshot.com"
+  },
+  "type": "module",
+  "sideEffects": [
+    "*.css"
+  ],
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "style": "./styles.css",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      }
+    },
+    "./styles.css": "./styles.css",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist",
+    "styles.css",
+    "README.md",
+    "LICENSE",
+    "CHANGELOG.md"
+  ],
+  "scripts": {
+    "build": "tsup && cp ../styles/dist/styles.css styles.css",
+    "typecheck": "tsc --noEmit",
+    "prepublishOnly": "pnpm run build"
+  },
+  "dependencies": {
+    "@colorshot/core": "workspace:^"
+  },
+  "peerDependencies": {
+    "react": "^18.0.0 || ^19.0.0",
+    "react-dom": "^18.0.0 || ^19.0.0"
+  },
+  "devDependencies": {
+    "@types/react": "^19.3.0",
+    "react": "^19.3.0",
+    "tsup": "^8.5.1",
+    "typescript": "~5.9.3",
+    "@types/react-dom": "^19.3.0",
+    "react-dom": "^19.3.0",
+    "@colorshot/styles": "workspace:*"
+  }
+}
