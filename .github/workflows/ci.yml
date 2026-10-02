@@ -32,7 +32,25 @@ jobs:
           cd packages/colorshot
           npx --yes publint --strict
           npx --yes @arethetypeswrong/cli --pack . --exclude-entrypoints styles.css
-      - name: Browser tests (Chromium, Firefox, WebKit)
+      - name: Browser tests (Chromium, Firefox)
         run: |
-          pnpm --filter @colorshot/playground exec playwright install --with-deps chromium firefox webkit
-          pnpm --filter @colorshot/playground test:e2e
+          pnpm --filter @colorshot/playground exec playwright install --with-deps chromium firefox
+          pnpm --filter @colorshot/playground test:e2e --project=chromium --project=firefox
+
+  # WebKit on macOS: the engine Safari users run. Linux WebKit (WebKitGTK) lays text out differently
+  # and is not what anyone ships the picker to.
+  webkit:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm build
+      - name: Browser tests (WebKit)
+        run: |
+          pnpm --filter @colorshot/playground exec playwright install webkit
+          pnpm --filter @colorshot/playground test:e2e --project=webkit

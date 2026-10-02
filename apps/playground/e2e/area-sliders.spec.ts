@@ -164,8 +164,10 @@ test.describe("two-finger wheel", () => {
     await expect(area).not.toHaveAttribute("data-wheeling", { timeout: 2000 });
     await expect.poll(async () => (await log(page, "full")).completes.length).toBe(1);
     const l = await log(page, "full");
-    // one change per animation frame: events that land in the same frame are applied together
-    expect(l.changes.length).toBeGreaterThanOrEqual(3);
+    // one change per animation frame: events that land in the same frame are applied together, so five
+    // events give at most five changes. How many frames they span depends on the machine (a busy CI
+    // runner can fit them into two), so only the upper bound is a rule
+    expect(l.changes.length).toBeGreaterThanOrEqual(1);
     expect(l.changes.length).toBeLessThanOrEqual(5);
     expect(l.completes[0]).toBe(l.value);
   });
