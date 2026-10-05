@@ -4,7 +4,7 @@ description: Use when adding a color picker, gradient picker or color input to a
 license: MIT
 metadata:
   author: Orshot
-  version: "0.1.0"
+  version: "0.2.0"
   homepage: https://orshot.com/open-source/colorshot
   source: https://github.com/rishimohan/colorshot
 ---
@@ -134,7 +134,7 @@ Put `ColorField` where a color `Input` was, or render `ColorPicker` inside the p
 }
 ```
 
-Styles live in `@layer colorshot`, so unlayered app CSS (including Tailwind utilities) wins without `!important`.
+Set `--cs-*` variables on the picker (`style`, `className` or a `[data-colorshot]` rule), not on a parent. The variables sit in `@layer colorshot`, so unlayered app CSS wins without `!important`. Every other rule is unlayered and scoped to `[data-colorshot]`, so CSS resets such as Tailwind preflight cannot restyle the picker. To restyle a part, match Colorshot's selector (`[data-colorshot] [data-part="swatch"]`) and load that CSS after Colorshot's.
 
 ## Custom layouts
 

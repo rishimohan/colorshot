@@ -1,12 +1,15 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import { fileURLToPath } from "node:url";
+import { colorshotLayers } from "../../packages/styles/scripts/layers.mjs";
 
 const src = (p: string) => fileURLToPath(new URL(`../../packages/${p}`, import.meta.url));
 
 // Point at package sources so the site always documents the code in this repo
 export default defineConfig({
   plugins: [react()],
+  // the same split as dist/styles.css (tokens layered, rules unlayered)
+  css: { postcss: { plugins: [colorshotLayers()] } },
   resolve: {
     alias: {
       "@orshot/colorshot/styles.css": src("styles/src/index.css"),

@@ -248,7 +248,8 @@ export function PartsPage() {
       <H2>A composed picker</H2>
       <p>
         <C>Picker.Root</C> lays its children out in a column with <C>--cs-gap</C> between them. Wrap parts in your own elements for
-        rows.
+        rows. Colorshot's button and input styles apply to everything under the root; put your own controls inside an element
+        with <C>data-part="slot"</C> to keep their styles.
       </p>
       <Example code={COMPOSED}>
         <div className="demo-col">

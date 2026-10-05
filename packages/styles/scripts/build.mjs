@@ -1,6 +1,7 @@
-// Concatenate src/parts/*.css in the order src/index.css imports them into dist/styles.css, as one
-// `@layer colorshot` block.
+// Concatenate src/parts/*.css in the order src/index.css imports them into dist/styles.css, then split the
+// `@layer colorshot` block: tokens stay layered, everything else is unlayered (see scripts/layers.mjs).
 import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { splitLayers } from "./layers.mjs";
 
 const entry = readFileSync("src/index.css", "utf8");
 const files = [...entry.matchAll(/@import "\.\/(parts\/[^"]+)";/g)].map((m) => m[1]);
@@ -10,7 +11,7 @@ const bodies = files.map((f) => {
   if (!m) throw new Error(`${f} must be a single @layer colorshot { ... } block`);
   return m[1];
 });
-const css = `@layer colorshot {\n${bodies.join("\n")}\n}`;
+const css = splitLayers(`@layer colorshot {\n${bodies.join("\n")}\n}`);
 mkdirSync("dist", { recursive: true });
 // light minification: comments and whitespace only, the rules stay exactly as written. (A full CSS minifier
 // such as lightningcss rewrites values: it turns rgb(0 0 0 / 0.14) into #00000024, which rounds the alpha.)

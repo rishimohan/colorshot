@@ -145,7 +145,8 @@ export const ColorPicker = /* @__PURE__ */ defineComponent({
               inputs ? <Inputs formats={props.formats} defaultFormat={props.defaultFormat} alpha={alpha} /> : null,
               props.contrastWith ? <Contrast background={props.contrastWith} /> : null,
               groups.value.length > 0 ? <Swatches groups={groups.value} search={props.swatchSearch} layout={props.swatchLayout} /> : null,
-              slots.default?.(),
+              // your own content: Colorshot's element styles skip this wrapper, and display: contents keeps the layout
+              slots.default ? <div data-part="slot">{slots.default()}</div> : null,
             ],
           }}
         </Root>

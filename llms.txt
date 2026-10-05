@@ -25,7 +25,7 @@ import "@orshot/colorshot/styles.css";
 | `@orshot/colorshot/react` | React components: `ColorPicker`, `ColorField`, and composable `Picker.*` parts |
 | `@orshot/colorshot/vue` | The same components for Vue 3 |
 | `@orshot/colorshot` | Framework-free helpers: parsing, formatting, conversion, gradients, contrast, the picker store. Safe in server code |
-| `@orshot/colorshot/styles.css` | The stylesheet, inside `@layer colorshot` so app styles win |
+| `@orshot/colorshot/styles.css` | The stylesheet. CSS resets cannot restyle the picker; theme variables in `@layer colorshot` lose to app CSS |
 
 React 18/19 and Vue 3.5+ are optional peer dependencies. An app only bundles the entry it imports.
 
@@ -131,7 +131,7 @@ import { Picker } from "@orshot/colorshot/react";
 
 ## Theming
 
-Set CSS variables on any parent or on the picker: `--cs-accent`, `--cs-radius`, `--cs-width`, `--cs-shadow` and more. Styles live in `@layer colorshot`, so unlayered app CSS overrides them without `!important`.
+Set CSS variables on the picker (`style`, `className` or a `[data-colorshot]` rule, not a parent): `--cs-accent`, `--cs-radius`, `--cs-width`, `--cs-shadow` and more. The variables sit in `@layer colorshot`, so unlayered app CSS overrides them without `!important`. Every other rule is unlayered and scoped to `[data-colorshot]`, so resets such as Tailwind preflight cannot restyle the picker in any load order. To restyle a part, match Colorshot's selector (`[data-colorshot] [data-part="swatch"]`) and load your CSS after Colorshot's.
 
 ## Notes for coding agents
 

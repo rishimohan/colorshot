@@ -1,6 +1,8 @@
 /*
  * Colorshot default styles.
- * Everything is in the "colorshot" cascade layer, so any style you write wins without !important.
+ * Every part file is one `@layer colorshot` block. The build (and the playground's Vite config) splits it with
+ * scripts/layers.mjs: --cs-* tokens stay in the layer, so app CSS sets them without !important; every other rule
+ * becomes unlayered, so CSS resets (Tailwind preflight, global button styles) cannot restyle the picker.
  * Theme with the --cs-* variables (see parts/base.css); target parts with [data-part="..."].
  * The build concatenates these files into one dist/styles.css.
  */

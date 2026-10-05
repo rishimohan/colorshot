@@ -169,7 +169,9 @@ const PRESETS: SwatchGroupConfig[] = [{ id: "presets", label: "Presets", colors:
       <p>Same props as the React "Compact" demo above; their DOM should match.</p>
     </header>
     <div class="section-body">
-      <ColorPicker v-model="compact" :theme="theme" size="sm" :swatches="PRESETS" />
+      <ColorPicker v-model="compact" :theme="theme" size="sm" :swatches="PRESETS">
+        <button type="button" data-testid="vue-slot-button" @click="compact = '#000000'">Reset to black</button>
+      </ColorPicker>
     </div>
   </section>
 </template>

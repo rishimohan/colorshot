@@ -15,6 +15,9 @@
     color: var(--cs-fg);
     font: inherit;
     font-size: var(--cs-field-font-size, 13px);
+    /* after the font shorthand, so the app's line-height (Tailwind sets 1.5 on html) stays out. No margin: where
+       the trigger sits is the app's call (className="mt-2" must keep working) */
+    line-height: 1.2;
     font-variant-numeric: tabular-nums;
     text-align: left;
     cursor: pointer;

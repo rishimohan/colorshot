@@ -1,5 +1,5 @@
 // Clean picker shots for the README and marketing images: one picker, real-looking swatch groups, nothing else.
-// /?capture&value=<css>&theme=light|dark&size=sm&variant=inset&field
+// /?capture&value=<css>&theme=light|dark&size=sm&variant=inset&field&slot[=plain]
 // scripts/marketing-shots.mjs drives it.
 import { useState } from "react";
 import { ColorField, ColorPicker } from "@orshot/colorshot/react";
@@ -49,7 +49,14 @@ export function Capture() {
           <ColorField label="Fill" defaultOpen {...common} />
         </div>
       ) : (
-        <ColorPicker {...common} />
+        <ColorPicker {...common}>
+          {/* &slot: an app button passed as children (&slot=plain: one without a class), for e2e/slot.spec.ts */}
+          {params.has("slot") && (
+            <button type="button" className={params.get("slot") === "plain" ? undefined : "host-btn"} data-testid="slot-button">
+              Pick from library
+            </button>
+          )}
+        </ColorPicker>
       )}
     </div>
   );

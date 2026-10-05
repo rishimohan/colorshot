@@ -2,6 +2,7 @@ import { defineConfig, transformWithOxc, type Plugin } from "vite";
 import react from "@vitejs/plugin-react";
 import vue from "@vitejs/plugin-vue";
 import { fileURLToPath } from "node:url";
+import { colorshotLayers } from "../../packages/styles/scripts/layers.mjs";
 
 const src = (p: string) => fileURLToPath(new URL(`../../packages/${p}`, import.meta.url));
 
@@ -19,6 +20,8 @@ const vueTsx = (): Plugin => ({
 // Point at package sources so edits hot-reload without a build step
 export default defineConfig({
   plugins: [vueTsx(), react({ exclude: [/node_modules/, /packages\/vue\//] }), vue()],
+  // the same split as dist/styles.css (tokens layered, rules unlayered), so dev and e2e see the published cascade
+  css: { postcss: { plugins: [colorshotLayers()] } },
   resolve: {
     alias: {
       "@orshot/colorshot/styles.css": src("styles/src/index.css"),

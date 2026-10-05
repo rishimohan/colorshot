@@ -25,7 +25,7 @@
     }
 
     /* keyboard focus: an outline in the system highlight color, on every control */
-    [data-colorshot] :focus-visible,
+    [data-colorshot] :focus-visible:not(:where([data-part="slot"] *)),
     [data-colorshot] [data-part]:focus-visible,
     [data-colorshot] [data-part="field"]:focus-within,
     [data-colorshot] [data-part="swatch-search"]:focus-within,

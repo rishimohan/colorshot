@@ -1,4 +1,4 @@
-import { forwardRef, memo, useEffect, useRef, type CSSProperties } from "react";
+import { Children, forwardRef, memo, useEffect, useRef, type CSSProperties } from "react";
 import { usePicker, usePickerContext } from "./context";
 import { Area } from "./parts/area";
 import { EyeDropper, type EyeDropperFn } from "./parts/eye-dropper";
@@ -142,7 +142,8 @@ export const ColorPicker = /* @__PURE__ */ forwardRef<HTMLDivElement, ColorPicke
       {inputs && <Inputs formats={formats} defaultFormat={defaultFormat} alpha={alpha} />}
       {contrastWith && <Contrast background={contrastWith} />}
       {groups.length > 0 && <Swatches groups={groups} search={swatchSearch} layout={swatchLayout} />}
-      {children}
+      {/* your own content: Colorshot's element styles skip this wrapper, and display: contents keeps the layout */}
+      {Children.toArray(children).length > 0 && <div data-part="slot">{children}</div>}
     </Root>
   );
 });

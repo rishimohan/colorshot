@@ -55,7 +55,8 @@ export function GettingStarted() {
       <p>Import the CSS once, near the root of your app. It is plain CSS with no build step and no Tailwind needed.</p>
       <Code code={`import "@orshot/colorshot/styles.css";`} />
       <p>
-        Every rule sits in a cascade layer named <C>colorshot</C>, so your own styles win without <C>!important</C>. See{" "}
+        CSS resets such as Tailwind's preflight cannot restyle the picker, whichever stylesheet loads first, and your own CSS
+        sets the <C>--cs-*</C> variables without <C>!important</C>. See{" "}
         <Link to="/docs/theming">Theming</Link>.
       </p>
 

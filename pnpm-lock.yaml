@@ -166,7 +166,11 @@ importers:
         specifier: ~5.9.3
         version: 5.9.3
 
-  packages/styles: {}
+  packages/styles:
+    devDependencies:
+      postcss:
+        specifier: ^8.5.28
+        version: 8.5.28
 
   packages/vue:
     dependencies:

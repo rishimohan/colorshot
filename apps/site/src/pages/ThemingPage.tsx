@@ -105,7 +105,7 @@ const SHADCN = `
 `;
 
 const LAYERS = `
-/* app.css: list colorshot first, so every other layer wins */
+/* app.css: list colorshot first, so every other layer can set the --cs-* variables */
 @layer colorshot, theme, base, components, utilities;
 @import "tailwindcss";
 `;
@@ -138,7 +138,7 @@ const PARTS_CSS = `
 `;
 
 const PART_GROUPS: [string, string[]][] = [
-  ["Root", ["root", "header", "current", "current-value", "current-original", "current-morph", "notice", "toast", "preview", "preview-swatch", "contrast", "contrast-sample", "contrast-label", "contrast-ratio", "contrast-level"]],
+  ["Root", ["root", "slot", "header", "current", "current-value", "current-original", "current-morph", "notice", "toast", "preview", "preview-swatch", "contrast", "contrast-sample", "contrast-label", "contrast-ratio", "contrast-level"]],
   ["Mode tabs", ["mode-tabs", "mode-indicator", "mode-label"]],
   ["Area and sliders", ["area", "area-thumb", "area-label", "area-canvas", "area-edge", "area-contrast", "gamut-badge", "slider-row", "eye-dropper", "sliders", "hue", "alpha", "slider-thumb"]],
   [
@@ -213,12 +213,18 @@ export function ThemingPage() {
       <H2>How the CSS is built</H2>
       <ul>
         <li>
-          All rules live in a cascade layer called <C>colorshot</C>. Any CSS you write outside a layer wins, without{" "}
-          <C>!important</C> and without matching specificity.
+          The <C>--cs-*</C> variables live in a cascade layer called <C>colorshot</C>. Any CSS you write outside a layer that
+          sets them wins, without <C>!important</C>.
+        </li>
+        <li>
+          Every other rule is unlayered and scoped to <C>[data-colorshot]</C>, so CSS resets (Tailwind's preflight, global{" "}
+          <C>button</C> or <C>input</C> styles) cannot restyle the picker, whichever stylesheet loads first. To restyle a part,
+          match Colorshot's selector and load your CSS after Colorshot's.
         </li>
         <li>
           Values come from <C>--cs-*</C> variables on <C>[data-colorshot]</C> (the picker) and <C>[data-colorshot-field]</C> (the
-          ColorField trigger).
+          ColorField trigger). Set them there, with <C>style</C>, <C>className</C> or a rule: they are not read from parent
+          elements.
         </li>
         <li>
           Every element has a <C>data-part</C> attribute. States use <C>data-state</C>. These names are public API and follow semver.
@@ -327,8 +333,9 @@ export function ThemingPage() {
 
       <H2>Cascade layers</H2>
       <p>
-        If your own CSS is also in layers, as with Tailwind v4, layer order decides who wins. Layers named first lose. Name{" "}
-        <C>colorshot</C> first, once, at the top of your main CSS file:
+        If your own CSS is also in layers, as with Tailwind v4, layer order decides who sets the <C>--cs-*</C> variables.
+        Layers named first lose. To set them with Tailwind classes, name <C>colorshot</C> first, once, at the top of your main
+        CSS file:
       </p>
       <Code lang="css" code={LAYERS} />
       <H3>shadcn/ui</H3>
