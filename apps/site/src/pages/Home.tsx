@@ -141,7 +141,7 @@ const FEATURES = [
   {
     kind: "tokens",
     title: "Tiny and themeable",
-    text: "No dependencies. One plain CSS file in a cascade layer, themed with --cs-* variables. Light and dark built in.",
+    text: "No dependencies. One plain CSS file that resets cannot break, themed with --cs-* variables. Light and dark built in.",
   },
 ];
 

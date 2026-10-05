@@ -22,7 +22,7 @@ const budgets = [
   ["@orshot/colorshot", [files.core], 13_700],
   ["@orshot/colorshot/react", [files.react], 24_300],
   ["@orshot/colorshot/vue", [files.vue], 24_700],
-  ["@orshot/colorshot/styles.css", [files.styles], 7_925],
+  ["@orshot/colorshot/styles.css", [files.styles], 8_000],
   ["React app total (react + core + styles)", [files.react, files.core, files.styles], 45_900],
   ["Vue app total (vue + core + styles)", [files.vue, files.core, files.styles], 46_300],
 ];

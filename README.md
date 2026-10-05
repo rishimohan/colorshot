@@ -307,6 +307,7 @@ if (result) {
 | `storageKey` | `string \| null` | `"colorshot"` | localStorage prefix for recent colors and the chosen format; `null` keeps them in memory |
 | `labels` | `Partial<Labels>` | English | Override any visible or screen reader text |
 | `className`, `style` | | | On the root element; set `--cs-*` variables through `style` |
+| `children` | `ReactNode` | | Your own content at the end of the picker (the default slot in Vue), inside `[data-part="slot"]`. A plain `<button>` gets Colorshot's control look; give it a class and it is styled by your CSS alone |
 
 ### Swatch groups
 
@@ -383,9 +384,13 @@ import { Picker } from "@orshot/colorshot/react";
 </Picker.Root>;
 ```
 
+Colorshot's button and input styles apply to every element under `Picker.Root`. Put your own controls inside an element with `data-part="slot"` to keep their styles; it uses `display: contents`, so the layout does not change.
+
 ### Theming
 
-Set CSS variables on any parent or on the picker. Styles live in `@layer colorshot`, so your own unlayered CSS (Tailwind utilities included) wins without `!important`.
+Set CSS variables on the picker, with its `style` or `className`, or in a `[data-colorshot]` rule. They are not read from parent elements. The variables sit in `@layer colorshot`, so any unlayered CSS of yours that sets them wins without `!important`.
+
+Every other rule is unlayered and scoped to `[data-colorshot]`, so CSS resets (Tailwind's preflight, global `button` or `input` styles) cannot restyle the picker, whichever stylesheet loads first. To restyle a part, match Colorshot's selector, such as `[data-colorshot] [data-part="swatch"]`, and load your CSS after Colorshot's.
 
 | Variable | What it sets |
 | --- | --- |

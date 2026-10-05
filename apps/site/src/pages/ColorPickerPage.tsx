@@ -96,7 +96,7 @@ export const ROOT_PROPS: PropRow[] = [
       </>
     ),
   },
-  { name: "children", type: "ReactNode", description: "Rendered at the end of the picker, after the swatches." },
+  { name: "children", type: "ReactNode", description: "Rendered at the end of the picker, after the swatches, inside [data-part=\"slot\"]. A plain <button> looks like Colorshot's controls; with a class it is styled by your CSS alone." },
   {
     name: "...div props",
     type: "HTMLAttributes<HTMLDivElement>",
@@ -335,10 +335,10 @@ export function ColorPickerPage() {
       </Example>
 
       <H3>Extra content</H3>
-      <p>Children render at the bottom of the picker.</p>
+      <p>Children render at the bottom of the picker, inside <C>[data-part="slot"]</C>. A plain <C>&lt;button&gt;</C> gets Colorshot's control look; give it a class and your CSS styles it alone.</p>
       <Example code={CHILDREN}>
         <ColorPicker theme={theme} value={f} onChange={setF}>
-          <button type="button" className="btn small" onClick={() => setF("")}>
+          <button type="button" onClick={() => setF("")}>
             Clear
           </button>
         </ColorPicker>

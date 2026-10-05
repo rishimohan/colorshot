@@ -2,7 +2,7 @@
   "name": "@colorshot/styles",
   "version": "0.1.0",
   "private": true,
-  "description": "Default styles for Colorshot pickers (React, Vue). Plain CSS in a cascade layer, themed with --cs-* variables.",
+  "description": "Default styles for Colorshot pickers (React, Vue). Plain CSS that resets cannot restyle, themed with --cs-* variables.",
   "keywords": [
     "color picker",
     "gradient",
@@ -51,5 +51,8 @@
   "scripts": {
     "build": "node scripts/build.mjs && cp dist/styles.css styles.css",
     "prepublishOnly": "pnpm run build"
+  },
+  "devDependencies": {
+    "postcss": "^8.5.28"
   }
 }
