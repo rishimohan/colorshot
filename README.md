@@ -1,7 +1,7 @@
 ![Colorshot, a color and gradient picker for React and Vue](.github/assets/cover.png)
 
 <div align="center"><strong>Colorshot</strong></div>
-<div align="center">Color and gradient picker for React and Vue.<br />Solid colors, linear, radial and conic gradients, swatch groups, one package.</div>
+<div align="center">React color picker and gradient picker, with a Vue version.<br />Solid colors, linear, radial and conic gradients, swatch groups, one package.</div>
 <br />
 <div align="center">
 <a href="https://orshot.com/open-source/colorshot">Docs and live demos</a>
@@ -22,6 +22,21 @@ Colorshot is the color picker inside [Orshot Studio](https://orshot.com), open s
 - A ready-made `ColorPicker`, a `ColorField` that opens it in a popover, or headless parts to build your own layout
 - Keyboard, screen reader, touch and two-finger trackpad support
 - React and Vue from one framework-free core, themed with CSS variables
+
+## Compared to other React color pickers
+
+| | Colorshot | react-colorful | react-color | react-best-gradient-color-picker |
+| --- | :---: | :---: | :---: | :---: |
+| Linear and radial gradients | ✓ | – | – | ✓ |
+| Conic and repeating gradients | ✓ | – | – | – |
+| OKLCH and Display P3 | ✓ | – | – | – |
+| Eyedropper | ✓ | – | – | ✓ |
+| Vue version | ✓ | – | – | – |
+| Install with the shadcn CLI | ✓ | – | – | – |
+| Dependencies | 0 | 0 | 7 | 3 |
+| Latest release | Oct 2026 | Sep 2026 | Oct 2020 | Dec 2024 |
+
+react-colorful is the smallest pick if you only need solid colors. react-color has had no release since 2020. Colorshot is for apps that need gradients, OKLCH or a Vue version. Checked on npm in October 2026.
 
 ## Install
 
