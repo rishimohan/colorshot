@@ -80,7 +80,7 @@
     "@types/react": "^19.3.0",
     "react": "^19.3.0",
     "tsup": "^8.5.1",
-    "typescript": "~5.9.3",
+    "typescript": "~7.0.2",
     "@types/react-dom": "^19.3.0",
     "react-dom": "^19.3.0",
     "@colorshot/styles": "workspace:*"
