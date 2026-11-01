@@ -25,7 +25,7 @@
   "devDependencies": {
     "@changesets/cli": "^3.0.3",
     "terser": "^5.51.2",
-    "turbo": "^2.11.6",
+    "turbo": "^2.11.10",
     "typescript": "~5.9.3"
   }
 }
