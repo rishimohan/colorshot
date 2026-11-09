@@ -121,13 +121,27 @@ describe("colorKey", () => {
   });
 });
 
-import { contrastLevel, contrastRatio } from "../src";
+import { contrastLevel, contrastMinimum, contrastRatio } from "../src";
 
 describe("contrast", () => {
   it("matches WCAG reference values", () => {
     expect(contrastRatio("#000", "#fff")).toBeCloseTo(21, 1);
     expect(contrastRatio("#777", "#fff")).toBeCloseTo(4.48, 1);
     expect(contrastLevel(4.6)).toBe("AA");
+  });
+  it("text levels are the default", () => {
+    expect([7, 4.5, 3, 2.99].map((r) => contrastLevel(r))).toEqual(["AAA", "AA", "AA Large", "Fail"]);
+    expect([7, 4.5, 3, 2.99].map((r) => contrastLevel(r, "text"))).toEqual(["AAA", "AA", "AA Large", "Fail"]);
+    expect(contrastMinimum()).toBe(4.5);
+    expect(contrastMinimum("text")).toBe(4.5);
+  });
+  it("UI components and graphics pass at 3:1 (WCAG 1.4.11)", () => {
+    expect([21, 3, 2.99, 1].map((r) => contrastLevel(r, "ui"))).toEqual(["Pass", "Pass", "Fail", "Fail"]);
+    expect(contrastMinimum("ui")).toBe(3);
+    // #3b82f6 on white: AA Large as text, a pass as a border or icon
+    const r = contrastRatio("#3b82f6", "#fff")!;
+    expect(contrastLevel(r)).toBe("AA Large");
+    expect(contrastLevel(r, "ui")).toBe("Pass");
   });
   it("uses the weakest stop of a gradient", () => {
     expect(contrastRatio("linear-gradient(#000, #fff)", "#fff")).toBeCloseTo(1, 1);

@@ -212,3 +212,42 @@ test.describe("other pickers", () => {
     await expect(solid).toHaveAttribute("data-mode", "solid");
   });
 });
+
+test.describe("contrastFor", () => {
+  /** The y values (0 top .. 1 bottom) of the area's contrast line. */
+  const lineYs = async (scope: ReturnType<typeof part>) => {
+    const d = (await part(scope, "area-contrast").locator("path").getAttribute("d"))!;
+    const ys = [...d.matchAll(/[\d.]+,([\d.]+)/g)].map((m) => Number(m[1]));
+    expect(ys.length).toBeGreaterThan(1);
+    return ys;
+  };
+  const lineY = async (scope: ReturnType<typeof part>) => {
+    const ys = await lineYs(scope);
+    return ys.reduce((a, b) => a + b, 0) / ys.length;
+  };
+
+  test('"ui" checks non-text contrast at 3:1: Pass in the badge, the area line moves to brighter colors', async ({ page }) => {
+    // the same color (#3B82F6, 3.68:1 on white) checked as text and as a UI component
+    const text = page.getByTestId("picker-contrast-text");
+    const ui = page.getByTestId("picker-contrast-ui");
+
+    await expect(part(text, "contrast-ratio")).toHaveText("3.68:1");
+    await expect(part(ui, "contrast-ratio")).toHaveText("3.68:1");
+    await expect(part(text, "contrast-level")).toHaveText("AA Large");
+    await expect(part(text, "contrast")).toHaveAttribute("data-level", "large");
+    await expect(part(ui, "contrast-level")).toHaveText("Pass");
+    await expect(part(ui, "contrast")).toHaveAttribute("data-level", "pass");
+
+    // against white, darker colors pass; 3:1 is reached at a higher brightness than 4.5:1, so the line sits higher
+    expect(await lineY(ui)).toBeLessThan(await lineY(text));
+  });
+
+  test("the line runs all the way to the top edge where the boundary leaves the area", async ({ page }) => {
+    // for this hue on white, saturated colors pass at full brightness, so both lines exit through the top edge,
+    // between two sampled columns; the line must end on the edge, not a few pixels below it
+    for (const id of ["picker-contrast-text", "picker-contrast-ui"]) {
+      const ys = await lineYs(page.getByTestId(id));
+      expect(ys.at(-1), id).toBe(0);
+    }
+  });
+});

@@ -131,6 +131,14 @@ Shows the WCAG ratio and draws the AA line on the color area.
 <ColorPicker value={value} onChange={setValue} modes={["solid"]} alpha={false} contrastWith="#FFFFFF" />
 ```
 
+### Border or icon color with a contrast check
+
+Borders, icons and focus rings need 3:1 (WCAG 1.4.11, non-text contrast). The badge shows Pass or Fail and the area line moves to 3:1.
+
+```tsx
+<ColorPicker value={value} onChange={setValue} modes={["solid"]} alpha={false} contrastWith="#FFFFFF" contrastFor="ui" />
+```
+
 ### OKLCH and wide gamut
 
 ```tsx
@@ -242,6 +250,7 @@ All off unless you turn them on.
 | `swatchSearch` | Search box that filters every swatch group by name, value or hex |
 | `gradientPresets` | Gradient swatches shown in gradient modes (`true` or your own list) |
 | `contrastWith="#fff"` | WCAG contrast badge against a background; gradients use their weakest stop |
+| `contrastFor="ui"` | Check `contrastWith` as a border, icon or focus ring (3:1, Pass / Fail) instead of text |
 | `tabIcons` | Icons next to the Solid / Linear / Radial / Conic labels |
 | `compare` | Before / after swatch beside the sliders; click "before" to restore |
 | `swatchLayout="stack"` | List every swatch group instead of one tab per group |
@@ -311,6 +320,7 @@ if (result) {
 | `gradientPresets` | `boolean \| string[]` | `false` | Gradient swatches in gradient modes: the built-in set or your own |
 | `interpolation` | `boolean` | `true` | Color blending menu (`in oklch` and others) for gradients |
 | `contrastWith` | `string` | | WCAG contrast badge and AA line against this background |
+| `contrastFor` | `"text" \| "ui"` | `"text"` | What `contrastWith` checks: text (4.5:1, AAA / AA / AA Large) or UI components and graphics (WCAG 1.4.11, 3:1, Pass / Fail) |
 | `compare` | `boolean` | `false` | Before / after swatch; click "before" to restore |
 | `history` | `boolean \| { limit?: number }` | `false` | Undo / redo with Cmd/Ctrl+Z inside the picker |
 | `space` | `"hsv" \| "oklch"` | `"hsv"` | Color model of the area and hue slider |
@@ -384,7 +394,7 @@ For your own layout, compose parts under `Picker.Root` (it takes the value props
 | `EyeDropper` | Screen color picking where the browser supports it |
 | `Swatches` | Swatch groups with tabs, search, add and remove |
 | `CurrentSwatch`, `Preview` | The current value, with an optional before and after |
-| `Contrast` | WCAG contrast badge against a background |
+| `Contrast` | WCAG contrast badge against a background, for text or UI (`contrastFor`) |
 | `Notice` | Shown when a value cannot be read |
 
 ```tsx
@@ -480,7 +490,7 @@ Every visible and screen reader string is a label. `{placeholders}` are filled i
 | `isGradient`, `parseGradient`, `serializeGradient` | Read and write CSS gradients, keeping what you did not edit |
 | `gradientAngle`, `gradientCenter` | Read a gradient's angle and center |
 | `gradientHandles`, `moveGradientHandle` | Start, end, stop and center handles for your own canvas |
-| `contrastRatio(fg, bg)`, `contrastLevel(ratio)`, `luminance` | WCAG contrast and its AA or AAA level |
+| `contrastRatio(fg, bg)`, `contrastLevel(ratio, target?)`, `contrastMinimum(target?)`, `luminance` | WCAG contrast and its level: AAA / AA / AA Large for text, Pass / Fail at 3:1 for `"ui"` |
 | `isSafeCssValue`, `safeCssValue` | Only plain colors and gradients, before a stored value reaches a style |
 
 ```ts

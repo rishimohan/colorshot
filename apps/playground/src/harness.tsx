@@ -328,6 +328,19 @@ export function Harness() {
       <Cell id="inset" title="variant=inset">
         <ColorPicker data-testid="picker-inset" defaultValue="#22C55E" storageKey={null} variant="inset" />
       </Cell>
+      <Cell id="contrast-for" title="contrastFor: text vs ui, same color (3.68:1)">
+        {(["text", "ui"] as const).map((target) => (
+          <ColorPicker
+            key={target}
+            data-testid={`picker-contrast-${target}`}
+            defaultValue="#3B82F6"
+            storageKey={null}
+            modes={["solid"]}
+            contrastWith="#ffffff"
+            contrastFor={target}
+          />
+        ))}
+      </Cell>
     </main>
   );
 }

@@ -1,5 +1,5 @@
 import { memo, useMemo, type CSSProperties, type KeyboardEvent } from "react";
-import { hsvToRgb, inGamut, luminance, num, parseColor, toGamut, toHexDigits } from "@colorshot/core";
+import { contrastMinimum, hsvToRgb, inGamut, luminance, num, parseColor, toGamut, toHexDigits, type ContrastTarget } from "@colorshot/core";
 import { usePicker, usePickerContext } from "../context";
 import { fill } from "../labels";
 import { keyStep, usePointerDrag } from "../use-drag";
@@ -13,13 +13,15 @@ const rgbCss = (h: number, s: number, v: number) => {
 export interface AreaProps {
   className?: string;
   style?: CSSProperties;
-  /** draw the WCAG AA (4.5:1) boundary against this background, like Chrome DevTools */
+  /** draw the WCAG AA boundary against this background, like Chrome DevTools */
   contrastWith?: string;
+  /** what the color is for: `"text"` (default) draws the line at 4.5:1, `"ui"` (borders, icons, focus rings) at 3:1 */
+  contrastFor?: ContrastTarget;
 }
 
 /** The 2D color area: HSV saturation × brightness by default, OKLCH chroma × lightness with `space="oklch"` on the root. */
 export function Area(props: AreaProps) {
-  const { contrastWith, ...rest } = props;
+  const { contrastWith, contrastFor, ...rest } = props;
   return usePickerContext().space === "oklch" ? <OklchArea {...rest} /> : <HsvArea {...props} />;
 }
 
@@ -27,8 +29,8 @@ export function Area(props: AreaProps) {
 /** sRGB channel to linear light, for WCAG relative luminance. */
 const linear = (v: number) => (v <= 0.04045 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4);
 
-/** For each saturation, the brightness where contrast with `bg` crosses 4.5:1. Returns an SVG path in 0..1 units. */
-function contrastPath(h: number, bg: string): string | null {
+/** For each saturation, the brightness where contrast with `bg` crosses `min`. Returns an SVG path in 0..1 units. */
+function contrastPath(h: number, bg: string, min: number): string | null {
   const parsed = parseColor(bg);
   if (!parsed) return null;
   // the background is read once; each sample is plain arithmetic on the HSV to RGB result, no color strings
@@ -38,17 +40,33 @@ function contrastPath(h: number, bg: string): string | null {
     const l = 0.2126 * linear(r) + 0.7152 * linear(g) + 0.0722 * linear(b) + 0.05;
     return l > lb ? l / lb : lb / l;
   };
+  const passes = (s: number, v: number) => ratioAt(s, v) >= min;
+  // the point between saturations `a` and `b` where the edge at brightness `v` (1 top, 0 bottom) flips
+  const edge = (a: number, b: number, v: number) => {
+    const pa = passes(a, v);
+    for (let k = 0; k < 14; k++) {
+      const mid = (a + b) / 2;
+      if (passes(mid, v) === pa) a = mid;
+      else b = mid;
+    }
+    return `${num((a + b) / 2, 4)},${1 - v}`;
+  };
   const pts: string[] = [];
+  let prev: [s: number, lo0: boolean, hi0: boolean] | null = null;
   for (let i = 0; i <= 24; i++) {
     const s = i / 24;
-    const lo0 = ratioAt(s, 0) >= 4.5;
-    const hi0 = ratioAt(s, 1) >= 4.5;
+    const lo0 = passes(s, 0);
+    const hi0 = passes(s, 1);
+    // the line enters or leaves through the top or bottom edge between two columns: end it on that edge,
+    // not at the last sampled column a few pixels short of it
+    if (prev && (lo0 !== hi0) !== (prev[1] !== prev[2])) pts.push(edge(prev[0], s, prev[2] !== hi0 ? 1 : 0));
+    prev = [s, lo0, hi0];
     if (lo0 === hi0) continue; // the whole column passes or fails
     let lo = 0;
     let hi = 1;
     for (let k = 0; k < 14; k++) {
       const mid = (lo + hi) / 2;
-      if ((ratioAt(s, mid) >= 4.5) === lo0) lo = mid;
+      if (passes(s, mid) === lo0) lo = mid;
       else hi = mid;
     }
     pts.push(`${num(s, 4)},${num(1 - (lo + hi) / 2, 4)}`);
@@ -56,14 +74,17 @@ function contrastPath(h: number, bg: string): string | null {
   return pts.length > 1 ? `M${pts.join(" L")}` : null;
 }
 
-const HsvArea = /* @__PURE__ */ memo(function HsvArea({ className, style, contrastWith }: AreaProps) {
+const HsvArea = /* @__PURE__ */ memo(function HsvArea({ className, style, contrastWith, contrastFor }: AreaProps) {
   const { store, labels } = usePickerContext();
   const { h, s, v } = usePicker((st) => ({ h: st.hsva.h, s: st.hsva.s, v: st.hsva.v }));
   const gamut = usePicker((st) => (inGamut(st.color, "srgb") ? null : inGamut(st.color, "display-p3") ? "P3" : "Wide"));
   const hex = usePicker((st) => toHexDigits(st.color));
   // the AA line only depends on hue, so it is recomputed when the hue moves, not on every drag frame
   const hueKey = Math.round(h);
-  const aaPath = useMemo(() => (contrastWith ? contrastPath(hueKey, contrastWith) : null), [hueKey, contrastWith]);
+  const aaPath = useMemo(
+    () => (contrastWith ? contrastPath(hueKey, contrastWith, contrastMinimum(contrastFor)) : null),
+    [hueKey, contrastWith, contrastFor],
+  );
 
   const ref = usePointerDrag<HTMLDivElement>({
     // the gamut badge is a button inside the area, not a drag start

@@ -29,7 +29,7 @@ export function Fill() {
 
 - Takes any CSS color or gradient string and gives one back, in the format it came in (or `outputFormat`).
 - Build your own layout from parts: `Picker.Root`, `Picker.Area`, `Picker.Hue`, `Picker.Alpha`, `Picker.GradientEditor`, `Picker.Inputs`, `Picker.Swatches`...
-- Optional: `space="oklch"`, `history`, `swatchSearch`, `gradientPresets`, `contrastWith`, `compare`, `size="sm"`, `variant="inset"`.
+- Optional: `space="oklch"`, `history`, `swatchSearch`, `gradientPresets`, `contrastWith` (with `contrastFor="ui"` for borders and icons), `compare`, `size="sm"`, `variant="inset"`.
 - React 18 and 19. The bundle is marked `"use client"` for the Next.js app router: use the components from client components, and import helpers such as `parseColor` from `@colorshot/core` in server code.
 
 Docs and live examples: https://orshot.com/open-source/colorshot · MIT · by [Orshot](https://orshot.com)

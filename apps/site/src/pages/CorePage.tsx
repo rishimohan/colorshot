@@ -164,7 +164,12 @@ const COLOR_FNS: PropRow[] = [
   { name: "colorKey(input)", type: "string", description: "A key for comparing colors however they are written." },
   { name: "hsvToRgb(h, s, v) / rgbToHsv(rgb)", type: "[number, number, number]", description: "HSV conversion. RGB 0-1." },
   { name: "contrastRatio(fg, bg)", type: "number | null", description: "WCAG 2 ratio, 1 to 21. Gradients use their weakest stop." },
-  { name: "contrastLevel(ratio)", type: '"AAA" | "AA" | "AA Large" | "Fail"', description: "WCAG level for normal text." },
+  {
+    name: "contrastLevel(ratio, target?)",
+    type: '"AAA" | "AA" | "AA Large" | "Fail" | "Pass"',
+    description: 'WCAG level. For text by default; "ui" (borders, icons, focus rings) gives Pass or Fail at 3:1.',
+  },
+  { name: "contrastMinimum(target?)", type: "number", description: 'The ratio needed to pass AA: 4.5 for text, 3 for "ui".' },
   { name: "luminance(color)", type: "number", description: "WCAG relative luminance." },
 ];
 

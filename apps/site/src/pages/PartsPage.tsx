@@ -62,6 +62,12 @@ const PARTS: PartDoc[] = [
         type: "string",
         description: "Draw the WCAG AA (4.5:1) boundary against this background, like Chrome DevTools. HSV area only.",
       },
+      {
+        name: "contrastFor",
+        type: '"text" | "ui"',
+        default: '"text"',
+        description: 'Draw the line at 3:1 instead, for borders, icons and focus rings (WCAG 1.4.11).',
+      },
       ...CS,
     ],
   },
@@ -125,7 +131,16 @@ const PARTS: PartDoc[] = [
   {
     name: "Picker.Contrast",
     what: "WCAG 2 contrast of the current value against a background, with the AA / AAA level.",
-    props: [{ name: "background", type: "string", description: "Required. The background color, any CSS color." }, ...CS],
+    props: [
+      { name: "background", type: "string", description: "Required. The background color, any CSS color." },
+      {
+        name: "contrastFor",
+        type: '"text" | "ui"',
+        default: '"text"',
+        description: '"ui" checks borders, icons and focus rings (WCAG 1.4.11): Pass or Fail at 3:1.',
+      },
+      ...CS,
+    ],
   },
 ];
 

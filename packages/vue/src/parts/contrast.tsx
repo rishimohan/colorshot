@@ -1,6 +1,7 @@
 import { defineComponent } from "vue";
-import { contrastLevel, contrastRatio, num, safeCssValue } from "@colorshot/core";
+import { contrastLevel, contrastRatio, num, safeCssValue, type ContrastTarget } from "@colorshot/core";
 import { usePicker, usePickerContext } from "../context";
+import { prop } from "../props";
 
 /** WCAG 2 contrast of the current value against a background. Gradients use their weakest stop. */
 export const Contrast = /* @__PURE__ */ defineComponent({
@@ -8,6 +9,8 @@ export const Contrast = /* @__PURE__ */ defineComponent({
   props: {
     /** the background the color sits on, any CSS color */
     background: { type: String, required: true },
+    /** what the color is for: `"text"` (default) shows AAA / AA / AA Large / Fail, `"ui"` (borders, icons, focus rings) Pass / Fail at 3:1 */
+    contrastFor: prop<ContrastTarget>(),
   },
   setup(props) {
     const ctx = usePickerContext();
@@ -15,7 +18,7 @@ export const Contrast = /* @__PURE__ */ defineComponent({
     return () => {
       const r = ratio.value;
       if (r === null) return null;
-      const level = contrastLevel(r);
+      const level = contrastLevel(r, props.contrastFor);
       return (
         <div data-part="contrast" data-level={level === "Fail" ? "fail" : level === "AA Large" ? "large" : "pass"}>
           <span data-part="contrast-sample" style={{ "--_cs-swatch": safeCssValue(props.background) }} aria-hidden="true" />

@@ -156,7 +156,7 @@ Import from `@orshot/colorshot` (safe in server code):
 
 - `parseColor(text)` returns `{ color }` or `null`; `formatColor(color, "hex" | "rgb" | "hsl" | "oklch" | ...)`
 - `isGradient`, `parseGradient`, `serializeGradient`
-- `contrastRatio(a, b)`, `contrastLevel`, `luminance`
+- `contrastRatio(a, b)`, `contrastLevel(ratio, "text" | "ui")`, `contrastMinimum`, `luminance`. `"ui"` is WCAG 1.4.11 non-text contrast (3:1) for borders, icons and focus rings
 - `isSafeCssValue(value)` / `safeCssValue(value)` before writing stored values into HTML or CSS
 - `gradientHandles(value, width, height)` and `moveGradientHandle(value, id, x, y, width, height, { snap })` to drag gradient handles on your own canvas
 
