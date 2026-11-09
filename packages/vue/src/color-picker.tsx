@@ -1,4 +1,5 @@
 import { defineComponent, onMounted, type ExtractPublicPropTypes } from "vue";
+import type { ContrastTarget } from "@colorshot/core";
 import { usePicker, usePickerContext } from "./context";
 import { Area } from "./parts/area";
 import { EyeDropper, type EyeDropperFn } from "./parts/eye-dropper";
@@ -72,6 +73,8 @@ export const colorPickerProps = /* @__PURE__ */ merge(rootProps, {
   gradientPresets: /* @__PURE__ */ boolOr<string[]>(Array),
   /** show WCAG contrast against this background color */
   contrastWith: String,
+  /** what `contrastWith` checks: `"text"` (default, 4.5:1) or `"ui"` for borders, icons and focus rings (WCAG 1.4.11, 3:1) */
+  contrastFor: prop<ContrastTarget>(),
   /** icons in the mode tabs (labels are always shown) */
   tabIcons: /* @__PURE__ */ bool(),
   /** split the header swatch into before / after once the value changes; clicking "before" restores it */
@@ -125,7 +128,7 @@ export const ColorPicker = /* @__PURE__ */ defineComponent({
           {{
             default: () => [
               // bleed: the area comes first, which is what makes it run to the panel edges
-              props.variant === "bleed" ? <Area contrastWith={props.contrastWith} /> : null,
+              props.variant === "bleed" ? <Area contrastWith={props.contrastWith} contrastFor={props.contrastFor} /> : null,
               multiMode || compare ? (
                 <div data-part="header">
                   <CurrentSwatch compare={compare} />
@@ -134,7 +137,7 @@ export const ColorPicker = /* @__PURE__ */ defineComponent({
               ) : null,
               <Notice />,
               <GradientEditor interpolation={props.interpolation} />,
-              props.variant === "inset" ? <Area contrastWith={props.contrastWith} /> : null,
+              props.variant === "inset" ? <Area contrastWith={props.contrastWith} contrastFor={props.contrastFor} /> : null,
               <div data-part="slider-row">
                 {eyeDropper !== false ? <EyeDropper pick={typeof eyeDropper === "function" ? eyeDropper : undefined} /> : null}
                 <div data-part="sliders">
@@ -143,7 +146,7 @@ export const ColorPicker = /* @__PURE__ */ defineComponent({
                 </div>
               </div>,
               inputs ? <Inputs formats={props.formats} defaultFormat={props.defaultFormat} alpha={alpha} /> : null,
-              props.contrastWith ? <Contrast background={props.contrastWith} /> : null,
+              props.contrastWith ? <Contrast background={props.contrastWith} contrastFor={props.contrastFor} /> : null,
               groups.value.length > 0 ? <Swatches groups={groups.value} search={props.swatchSearch} layout={props.swatchLayout} /> : null,
               // your own content: Colorshot's element styles skip this wrapper, and display: contents keeps the layout
               slots.default ? <div data-part="slot">{slots.default()}</div> : null,

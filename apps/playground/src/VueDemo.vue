@@ -134,7 +134,7 @@ const PRESETS: SwatchGroupConfig[] = [{ id: "presets", label: "Presets", colors:
           </label>
           <label class="field-row">
             <span>Border</span>
-            <ColorField v-model="border" :theme="theme" label="Border" :modes="['solid']" />
+            <ColorField v-model="border" :theme="theme" label="Border" :modes="['solid']" contrast-with="#ffffff" contrast-for="ui" />
           </label>
           <label class="field-row">
             <span>Text</span>

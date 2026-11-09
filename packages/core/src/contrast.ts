@@ -45,8 +45,25 @@ export function contrastRatio(foreground: string, background: string): number | 
   return fg ? ratio(fg.color, base) : null;
 }
 
-/** WCAG level for normal text: AAA (7), AA (4.5), AA large text (3), or fail. */
-export function contrastLevel(ratio: number): "AAA" | "AA" | "AA Large" | "Fail" {
+/**
+ * What a color is checked for: `"text"` (WCAG 1.4.3, 4.5:1) or `"ui"`, non-text such as borders, icons and
+ * focus rings (WCAG 1.4.11, 3:1).
+ */
+export type ContrastTarget = "text" | "ui";
+
+/** The ratio a color needs to pass AA: 4.5 for text, 3 for UI components and graphics. */
+export const contrastMinimum = (target: ContrastTarget = "text"): number => (target === "ui" ? 3 : 4.5);
+
+/**
+ * WCAG level of a contrast ratio.
+ * Text (default): AAA (7), AA (4.5), AA large text (3), or fail.
+ * UI components and graphics (`"ui"`): pass (3) or fail; WCAG 1.4.11 has no AAA level.
+ */
+export function contrastLevel(ratio: number, target?: "text"): "AAA" | "AA" | "AA Large" | "Fail";
+export function contrastLevel(ratio: number, target: "ui"): "Pass" | "Fail";
+export function contrastLevel(ratio: number, target?: ContrastTarget): "AAA" | "AA" | "AA Large" | "Pass" | "Fail";
+export function contrastLevel(ratio: number, target: ContrastTarget = "text"): "AAA" | "AA" | "AA Large" | "Pass" | "Fail" {
+  if (target === "ui") return ratio >= 3 ? "Pass" : "Fail";
   if (ratio >= 7) return "AAA";
   if (ratio >= 4.5) return "AA";
   if (ratio >= 3) return "AA Large";

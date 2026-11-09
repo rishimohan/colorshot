@@ -89,6 +89,7 @@ isSafeCssValue(storedValue); // validate stored values before writing them into 
 | Gradients, no solid | `modes={["linear", "radial", "conic"]} gradientPresets` |
 | Solid, no transparency | `modes={["solid"]} alpha={false}` |
 | Text color with WCAG check | `modes={["solid"]} alpha={false} contrastWith="#FFFFFF"` |
+| Border or icon color with WCAG check (3:1) | `modes={["solid"]} alpha={false} contrastWith="#FFFFFF" contrastFor="ui"` |
 | OKLCH editing | `space="oklch" outputFormat="oklch"` |
 | Undo and before / after | `history compare` |
 | Compact inspector panel | `size="sm"` |

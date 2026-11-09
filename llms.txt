@@ -102,7 +102,7 @@ formatColor(parseColor("rgb(62 92 235 / 50%)").color, "hex"); // "#3e5ceb80"
 - `size: "sm"`: compact, 240px wide.
 - `variant: "inset"`: mode tabs first and a framed area.
 - `storageKey: string | null`: where recent colors and the chosen format are remembered. `null` keeps them in memory.
-- Optional features, all off by default: `space="oklch"`, `history` (undo/redo), `contrastWith="#fff"` (WCAG badge), `compare`, `tabIcons`, `swatchLayout="stack"`, `shortcuts={false}`, `eyeDropper={fn}`.
+- Optional features, all off by default: `space="oklch"`, `history` (undo/redo), `contrastWith="#fff"` (WCAG badge and AA line in the area; add `contrastFor="ui"` for borders, icons and focus rings: 3:1, Pass / Fail), `compare`, `tabIcons`, `swatchLayout="stack"`, `shortcuts={false}`, `eyeDropper={fn}`.
 
 Always on: Cmd/Ctrl+C copies and Cmd/Ctrl+V pastes any CSS color or gradient while the picker has focus; keys 1-4 switch modes; two-finger trackpad swipes move the area, sliders, stops and angle; Alt-drag duplicates a stop; drag a stop off the bar or press Delete to remove it.
 
@@ -125,7 +125,7 @@ import { Picker } from "@orshot/colorshot/react";
 - Colors: `parseColor`, `formatColor`, `convert`, `toSrgb`, `inGamut`, `toGamut`, `hsvToRgb`, `rgbToHsv`, `colorKey`
 - Gradients: `isGradient`, `parseGradient`, `serializeGradient`, `gradientAngle`, `gradientCenter`
 - Canvas handles: `gradientHandles(value, width, height)` returns handles for drawing a gradient editor on your own canvas (or `null` when the value is not a gradient); `moveGradientHandle(value, id, x, y, width, height, { snap })` returns the new CSS value
-- Contrast: `contrastRatio`, `contrastLevel`, `luminance`
+- Contrast: `contrastRatio`, `contrastLevel(ratio, target?)` (`"text"` default: AAA / AA / AA Large / Fail; `"ui"`: Pass / Fail at 3:1), `contrastMinimum(target?)` (4.5 or 3), `luminance`
 - Safety: `isSafeCssValue`, `safeCssValue`
 - Store: `createPicker(options)`, the state machine the React and Vue pickers use
 

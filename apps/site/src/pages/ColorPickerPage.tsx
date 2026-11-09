@@ -176,7 +176,14 @@ export const PICKER_PROPS: PropRow[] = [
     name: "contrastWith",
     type: "string",
     description:
-      "Show the WCAG contrast ratio against this background color. Gradients use their weakest stop. The color area also draws a line where contrast crosses 4.5:1.",
+      "Show the WCAG contrast ratio against this background color. Gradients use their weakest stop. The color area also draws a line where contrast crosses 4.5:1 (3:1 with contrastFor=\"ui\").",
+  },
+  {
+    name: "contrastFor",
+    type: '"text" | "ui"',
+    default: '"text"',
+    description:
+      'What contrastWith checks. "text": AAA, AA, AA Large or Fail. "ui": borders, icons and focus rings (WCAG 1.4.11 non-text contrast), Pass or Fail at 3:1.',
   },
   { name: "tabIcons", type: "boolean", default: "false", description: "Icons next to the Solid, Linear, Radial and Conic labels." },
   {

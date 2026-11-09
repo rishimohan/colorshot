@@ -1,4 +1,5 @@
 import { Children, forwardRef, memo, useEffect, useRef, type CSSProperties } from "react";
+import type { ContrastTarget } from "@colorshot/core";
 import { usePicker, usePickerContext } from "./context";
 import { Area } from "./parts/area";
 import { EyeDropper, type EyeDropperFn } from "./parts/eye-dropper";
@@ -69,6 +70,8 @@ export interface ColorPickerProps extends RootProps {
   gradientPresets?: boolean | string[];
   /** show WCAG contrast against this background color */
   contrastWith?: string;
+  /** what `contrastWith` checks: `"text"` (default, 4.5:1) or `"ui"` for borders, icons and focus rings (WCAG 1.4.11, 3:1) */
+  contrastFor?: ContrastTarget;
   /** icons in the mode tabs (labels are always shown) */
   tabIcons?: boolean;
   /** split the header swatch into before / after once the value changes; clicking "before" restores it */
@@ -95,6 +98,7 @@ export const ColorPicker = /* @__PURE__ */ forwardRef<HTMLDivElement, ColorPicke
     swatchSearch,
     gradientPresets,
     contrastWith,
+    contrastFor,
     tabIcons,
     compare,
     swatchLayout,
@@ -122,7 +126,7 @@ export const ColorPicker = /* @__PURE__ */ forwardRef<HTMLDivElement, ColorPicke
   return (
     <Root ref={ref} data-variant={variant} {...root}>
       {/* bleed: the area comes first, which is what makes it run to the panel edges */}
-      {variant === "bleed" && <Area contrastWith={contrastWith} />}
+      {variant === "bleed" && <Area contrastWith={contrastWith} contrastFor={contrastFor} />}
       {(multiMode || compare) && (
         <div data-part="header">
           <CurrentSwatch compare={compare} />
@@ -131,7 +135,7 @@ export const ColorPicker = /* @__PURE__ */ forwardRef<HTMLDivElement, ColorPicke
       )}
       <Notice />
       <GradientEditor interpolation={interpolation} />
-      {variant === "inset" && <Area contrastWith={contrastWith} />}
+      {variant === "inset" && <Area contrastWith={contrastWith} contrastFor={contrastFor} />}
       <div data-part="slider-row">
         {eyeDropper !== false && <EyeDropper pick={typeof eyeDropper === "function" ? eyeDropper : undefined} />}
         <div data-part="sliders">
@@ -140,7 +144,7 @@ export const ColorPicker = /* @__PURE__ */ forwardRef<HTMLDivElement, ColorPicke
         </div>
       </div>
       {inputs && <Inputs formats={formats} defaultFormat={defaultFormat} alpha={alpha} />}
-      {contrastWith && <Contrast background={contrastWith} />}
+      {contrastWith && <Contrast background={contrastWith} contrastFor={contrastFor} />}
       {groups.length > 0 && <Swatches groups={groups} search={swatchSearch} layout={swatchLayout} />}
       {/* your own content: Colorshot's element styles skip this wrapper, and display: contents keeps the layout */}
       {Children.toArray(children).length > 0 && <div data-part="slot">{children}</div>}

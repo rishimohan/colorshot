@@ -338,7 +338,7 @@ export function AccessibilityPage() {
         <li>Right-to-left pages (<C>dir="rtl"</C>) flip the tab indicators and the arrow keys of tabs, radio groups and swatches.</li>
         <li>
           <C>contrastWith</C> shows the WCAG ratio of the picked color against a background, so users can check text colors as they
-          pick.
+          pick. With <C>contrastFor="ui"</C> it checks borders, icons and focus rings instead (WCAG 1.4.11, 3:1).
         </li>
       </ul>
       <Note>

@@ -92,4 +92,5 @@ export type {
   PickerStore,
   GradientHandle,
   GradientHandles,
+  ContrastTarget,
 } from "@colorshot/core";

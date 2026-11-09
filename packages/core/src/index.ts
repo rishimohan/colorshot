@@ -28,6 +28,7 @@ export { createPicker, ALL_MODES } from "./picker";
 /** @internal shared with @colorshot/react and @colorshot/vue; not part of the stable API */
 export { splitTopLevel, num } from "./tokens";
 export { isSafeCssValue, safeCssValue, MAX_CSS_LENGTH } from "./safe";
-export { contrastRatio, contrastLevel, luminance } from "./contrast";
+export type { ContrastTarget } from "./contrast";
+export { contrastRatio, contrastLevel, contrastMinimum, luminance } from "./contrast";
 export type { GradientHandle, GradientHandleKind, GradientHandles } from "./handles";
 export { gradientHandles, moveGradientHandle } from "./handles";

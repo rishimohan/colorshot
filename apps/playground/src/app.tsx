@@ -96,6 +96,7 @@ interface Options {
   search: boolean;
   presets: boolean;
   contrast: boolean;
+  contrastUi: boolean;
   icons: boolean;
   compare: boolean;
   stack: boolean;
@@ -109,6 +110,7 @@ const OPTION_LABELS: Record<keyof Options, string> = {
   search: "Swatch search (swatchSearch)",
   presets: "Gradient presets (gradientPresets)",
   contrast: "Contrast vs white (contrastWith)",
+  contrastUi: "Non-text contrast, 3:1 (contrastFor=\"ui\")",
   icons: "Tab icons (tabIcons)",
   compare: "Before / after (compare)",
   stack: "Stacked swatches (swatchLayout)",
@@ -124,6 +126,7 @@ function MainDemo({ theme, outputFormat }: { theme?: "light" | "dark"; outputFor
     search: true,
     presets: true,
     contrast: false,
+    contrastUi: false,
     icons: false,
     compare: false,
     stack: false,
@@ -153,6 +156,7 @@ function MainDemo({ theme, outputFormat }: { theme?: "light" | "dark"; outputFor
           swatchSearch={opts.search}
           gradientPresets={opts.presets}
           contrastWith={opts.contrast ? "#ffffff" : undefined}
+          contrastFor={opts.contrastUi ? "ui" : "text"}
           tabIcons={opts.icons}
           compare={opts.compare}
           swatchLayout={opts.stack ? "stack" : "tabs"}
@@ -282,7 +286,16 @@ function FieldDemo({ theme, outputFormat }: { theme?: "light" | "dark"; outputFo
           </label>
           <label className="field-row">
             <span>Border</span>
-            <ColorField theme={theme} label="Border" value={border} onChange={setBorder} modes={["solid"]} outputFormat={outputFormat} />
+            <ColorField
+              theme={theme}
+              label="Border"
+              value={border}
+              onChange={setBorder}
+              modes={["solid"]}
+              contrastWith="#ffffff"
+              contrastFor="ui"
+              outputFormat={outputFormat}
+            />
           </label>
           <label className="field-row">
             <span>Text</span>
